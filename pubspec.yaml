@@ -1,0 +1,79 @@
+name: flutter_kaypi
+description: A new Flutter project.
+
+
+version: 1.0.3+3
+
+environment:
+  sdk: ">=2.12.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:   
+    sdk: flutter 
+  cupertino_icons: ^1.0.2
+  permission_handler: ^8.1.4+2
+  card_swiper: ^1.0.4
+  google_maps_flutter: ^2.6.0
+  google_maps_flutter_web: ^0.5.6+2
+  http: ^0.13.3
+  json_serializable: ^4.1.4
+  geolocator: ^7.7.0
+  flutter_polyline_points: ^1.0.0
+  geocoding: ^2.0.0
+  # url_launcher: ^5.4.0
+  url_launcher: ^6.0.15
+  expandable: ^5.0.1
+  carousel_slider: ^4.0.0
+  hidden_drawer_menu: ^3.0.0
+  flutter_zoom_drawer: ^2.1.1
+  provider: ^6.0.1
+  smooth_page_indicator: ^1.0.0+2
+
+dev_dependencies:
+  build_runner: ^2.1.2
+  flutter_test:
+    sdk: flutter
+
+
+flutter:
+
+ 
+  uses-material-design: true
+  assets:
+    - assets/img/
+    - assets/img/lugaresTuristicosImg/
+    - assets/img/ayudaImg/
+    - assets/locations.json
+    - assets/img/KaypiLogo.png
+    - assets/img/Cochabamba_Cultura.png
+    - assets/img/LineasMicros.jpg
+    - assets/img/LineaTaxiTruffi.jpg
+    - assets/img/ruta.jpg
+    - assets/img/worldmap_cbba.png
+    - lib/utils/Lineas.json
+    - assets/imgPuntos/1p.jpg
+    - assets/imgPuntos/2p.jpg
+    - assets/imgPuntos/3p.jpg
+    - assets/imgPuntos/4p.jpg
+    - assets/imgPuntos/5p.jpg
+    - assets/imgPuntos/6p.jpg
+    - assets/imgPuntos/7p.jpg
+    - assets/imgPuntos/8p.jpg
+    - assets/imgPuntos/9p.jpg
+    - assets/imgPuntos/10p.jpg
+    - assets/imgPuntos/11p.jpg
+    - assets/imgPuntos/12p.jpg
+    - assets/imgPuntos/13p.jpg
+    - assets/imgPuntos/14p.jpg
+    - assets/imgPuntos/15p.jpg
+    - assets/imgPuntos/16p.jpg
+    - assets/PuntosEstrategicos.json
+
+
+
+    - assets/destination_map_marker.png
+    - assets/driving_pin.png
+    - assets/friend1.jpg
+    - assets/friend2.jpg

@@ -1,0 +1,19 @@
+{
+
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "MyApp",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "MyApp (profile mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        }
+
+    ]
+}
+
