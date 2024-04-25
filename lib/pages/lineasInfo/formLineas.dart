@@ -1,4 +1,5 @@
-import 'dart:ffi';
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_kaypi/provider/lineas_api.dart';
 import 'package:flutter_kaypi/pages/lineasInfo/linea_page.dart';
@@ -108,15 +109,12 @@ class _FormLineasState extends State<FormLineas> {
                       itemCount: filteredLines.length,
                       itemBuilder: (BuildContext context, int index) {
                         return GestureDetector(
-                          onTap: () =>
-                              Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) =>
-                                LineaPage(linea: filteredLines[index]),
-                          )),
-
-                          /* Navigator.of(context).pushNamed(Country.routeName,
-                          arguments: filteredPoints[index]);*/
-
+                          onTap: () => Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  LineaPage(linea: filteredLines[index]),
+                            ),
+                          ),
                           child: Card(
                             elevation: 10,
                             child: Padding(
@@ -165,52 +163,52 @@ class _FormLineasState extends State<FormLineas> {
               listaCat = getCategories(lineas!);
               items = listaCat;
               listaFinal = getLinesFromCat(dropdownvalue.toString(), lineas);
-              return  RefreshIndicator(
-                        child: ListView(children: [
-                ListTile(
-                  tileColor: Colors.white,
-                  title: Text(
-                    "Categorias",
-                    style: TextStyle(
-                        fontSize: 18.0,
+              return RefreshIndicator(
+                child: ListView(children: [
+                  ListTile(
+                    tileColor: Colors.white,
+                    title: Text(
+                      "Categorias",
+                      style: TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blue.shade900),
+                    ),
+                    trailing: DropdownButton(
+                      value: dropdownvalue,
+                      iconSize: 35,
+                      underline:
+                          Container(color: Colors.blue.shade900, height: 1.5),
+                      style: const TextStyle(
+                        color: Colors.indigo,
                         fontWeight: FontWeight.bold,
-                        color: Colors.blue.shade900),
-                  ),
-                  trailing: DropdownButton(
-                    value: dropdownvalue,
-                    iconSize: 35,
-                    underline:
-                        Container(color: Colors.blue.shade900, height: 1.5),
-                    style: const TextStyle(
-                      color: Colors.indigo,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18.0,
+                        fontSize: 18.0,
+                      ),
+                      icon: Icon(
+                        Icons.keyboard_arrow_down,
+                        color: Colors.blue.shade900,
+                      ),
+                      items: items.map((String items) {
+                        return DropdownMenuItem(
+                            value: items, child: Text(items));
+                      }).toList(),
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          dropdownvalue = newValue!;
+                          listaFinal =
+                              getLinesFromCat(dropdownvalue.toString(), lineas);
+                        });
+                      },
                     ),
-                    icon: Icon(
-                      Icons.keyboard_arrow_down,
-                      color: Colors.blue.shade900,
-                    ),
-                    items: items.map((String items) {
-                      return DropdownMenuItem(value: items, child: Text(items));
-                    }).toList(),
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        dropdownvalue = newValue!;
-                        listaFinal =
-                            getLinesFromCat(dropdownvalue.toString(), lineas);
-                      });
-                    },
                   ),
-                ),
-                Divider(
-                  height: 5.0,
-                  color: Colors.blue.shade900,
-                ),
-                _buildLineas(listaFinal, context, _isMinBusVisible),
-              ]),
-                        onRefresh: _pullRefresh,
-                      );
-               
+                  Divider(
+                    height: 5.0,
+                    color: Colors.blue.shade900,
+                  ),
+                  _buildLineas(listaFinal, context, _isMinBusVisible),
+                ]),
+                onRefresh: _pullRefresh,
+              );
           }
         },
       );
@@ -259,16 +257,24 @@ class _FormLineasState extends State<FormLineas> {
         //widget con informacion de lineas individuales
         return ListTile(
           tileColor: Colors.white,
-          onTap: () => Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => LineaPage(linea: linea),
-          )),
+          onTap: () => Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => LineaPage(linea: linea),
+            ),
+          ),
           leading: CircleAvatar(
-            //backgroundImage: AssetImage(linea.imagen),
-            backgroundImage: AssetImage('assets/img/KaypiLogo.png'),
-            backgroundColor: Colors.transparent,
+            backgroundColor: _getRandomColor(),
+            child: Text(
+              _getInitial(linea.nombre),
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
           ),
           title: Text(
-            linea.nombre,
+            _getTitle(linea.nombre),
             style: TextStyle(
                 fontSize: 18.0,
                 fontWeight: FontWeight.bold,
@@ -284,10 +290,51 @@ class _FormLineasState extends State<FormLineas> {
       },
     );
   }
+
+  String _getInitial(String nombre) {
+    if (nombre.startsWith("Línea ")) {
+      // Si el nombre de la línea comienza con "Linea ", se omite esa parte.
+      String lineName = nombre.substring(6);
+      // Verificar si el nombre contiene un número
+      int? number = int.tryParse(lineName);
+      if (number != null) {
+        return '$number';
+      } else {
+        return lineName.substring(0, 1).toUpperCase();
+      }
+    } else {
+      // Si no comienza con "Linea ", simplemente se toma la primera letra
+      return nombre.substring(0, 1).toUpperCase();
+    }
+  }
+
+  String _getTitle(String nombre) {
+    // Si el nombre de la línea comienza con "Linea ", se omite esa parte.
+    return nombre.startsWith("Linea ") ? nombre.substring(6) : nombre;
+  }
+
+  Color _getRandomColor() {
+    List<Color> colors = [
+      Colors.red,
+      Colors.green,
+      Colors.blue,
+      Colors.orange,
+      Colors.purple,
+      Colors.yellow,
+      Colors.teal,
+      Colors.pink,
+      Colors.indigo,
+      Colors.brown,
+    ];
+
+    Random random = Random();
+    return colors[random.nextInt(colors.length)];
+  }
+
   Future<void> _pullRefresh() async {
-     List<Linea> freshLines = await lineasApi.cargarData();
-     setState(() {
+    List<Linea> freshLines = await lineasApi.cargarData();
+    setState(() {
       futureLineas = Future.value(freshLines);
     });
- }
+  }
 }

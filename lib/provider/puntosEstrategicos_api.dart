@@ -13,8 +13,10 @@ class PuntoEstrategicoApi {
     //En https://containers.back4app.com/ vincular con el repositorio git del admin que debe
     //tener su Dockerfile. Actualizar en el admin src>public>js>listaPuntosEstrategicos.js
     //fetch('https://kaypiadmin3-z5xp9o37.b4a.run/listPuntos')
-    //http.Response response = await http.get(Uri.parse('https://kaypi-0aad18445e35.herokuapp.com/api/puntos'));
-    http.Response response = await http.get(Uri.parse('http://10.0.2.2:3000/api/puntos'));
+
+    http.Response response = await http
+        .get(Uri.parse('https://kaypi-0aad18445e35.herokuapp.com/api/puntos'));
+    //http.Response response = await http.get(Uri.parse('http://10.0.2.2:3000/api/puntos'));
     final body = await json.decode(response.body);
 
     final list = body['puntosEstrategicos'] as List<dynamic>;
