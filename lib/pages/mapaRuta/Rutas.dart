@@ -39,11 +39,12 @@ class _RutasState extends State<Rutas> {
   Map<PolylineId, Polyline> polylines = {};
   List<LatLng> polylineCoordinates = [];
   late PolylinePoints polylinePoints;
-  var cont = 0;
+  //var cont = 0;
   bool bandera = false;
   int posicion = 0;
   final _rutasProvider = RutasProvider();
   int direccionRuta = 0;
+  Set<Circle> circles = Set<Circle>();
 
   CameraPosition _initialLocation =
       CameraPosition(target: LatLng(-17.4139766, -66.1653224), zoom: 12.0);
@@ -97,7 +98,7 @@ class _RutasState extends State<Rutas> {
     super.initState();
     getPuntos();
     getLineas();
-    // _getCurrentLocation();
+    //_getCurrentLocation();
   }
 
   @override
@@ -122,173 +123,203 @@ class _RutasState extends State<Rutas> {
       body: Column(
         children: [
           Expanded(
-            child: GoogleMap(
-              gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>[
-                new Factory<OneSequenceGestureRecognizer>(
-                  () => new EagerGestureRecognizer(),
-                )
-              ].toSet(),
-              markers: Set<Marker>.from(markers),
-              initialCameraPosition: _initialLocation,
-              myLocationEnabled: true,
-              myLocationButtonEnabled: true,
-              zoomControlsEnabled: true,
-              zoomGesturesEnabled: true,
-              compassEnabled: true,
-              polylines: polyline,
-              scrollGesturesEnabled: true,
-              rotateGesturesEnabled: true,
-              tiltGesturesEnabled: true,
-              onMapCreated: (GoogleMapController controller) {
-                mapController = controller;
-              },
-              onTap: _handleTap,
+            child: Stack(
+              children: [
+                GoogleMap(
+                  gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>[
+                    new Factory<OneSequenceGestureRecognizer>(
+                          () => new EagerGestureRecognizer(),
+                    )
+                  ].toSet(),
+                  markers: Set<Marker>.from(markers),
+                  circles: circles,
+                  initialCameraPosition: _initialLocation,
+                  myLocationEnabled: true,
+                  myLocationButtonEnabled: true,
+                  zoomControlsEnabled: true,
+                  zoomGesturesEnabled: true,
+                  compassEnabled: true,
+                  polylines: polyline,
+                  scrollGesturesEnabled: true,
+                  rotateGesturesEnabled: true,
+                  tiltGesturesEnabled: true,
+                  onMapCreated: (GoogleMapController controller) {
+                    mapController = controller;
+                  },
+                  onTap: _handleTap,
+                ),
+                Positioned(
+                  top: 60,
+                  right: 11,
+                  child: GestureDetector(
+                    onTap: () {
+                      markers.clear();
+                      latlngPuntos.clear();
+                      polyline.clear();
+                      nlines = [];
+                      setState(() {});
+                      posicion = 0;
+                      circles.clear();
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.blue.shade900,
+                      ),
+                      child: Icon(
+                        Icons.delete_sweep_outlined,
+                        color: Colors.white,
+                        size: 24,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
           nlines.length > 0
               ? Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    CarouselSlider.builder(
-                        carouselController: _carouselController,
-                        itemCount: nlines.length,
-                        options: CarouselOptions(
-                            onPageChanged: (index, reason) {
-                              posicion = index;
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              CarouselSlider.builder(
+                carouselController: _carouselController,
+                itemCount: nlines.length,
+                options: CarouselOptions(
+                  onPageChanged: (index, reason) {
+                    posicion = index;
+                    latlng.clear();
+                    setState(() {});
+                    for (var i in nlines[posicion].ruta[direccionRuta].puntos) {
+                      latlng.add(new LatLng(i.lat, i.lng));
+                    }
+                    _OnMapCreated(mapController);
+                  },
+                  enableInfiniteScroll: false,
+                  height: 100,
+                  viewportFraction: 1,
+                ),
+                itemBuilder: (_, i, ri) {
+                  return Container(
+                    margin: EdgeInsets.symmetric(horizontal: 15.0),
+                    color: Colors.white,
+                    child: ListTile(
+                      leading: Image(
+                        image: AssetImage('assets/img/KaypiLogo.png'),
+                      ),
+                      title: Text(
+                        nlines[posicion].nombre,
+                        style: TextStyle(
+                          fontSize: 15.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      subtitle: Text(nlines[posicion].horarios[0]),
+                      trailing: TextButton(
+                        onPressed: () {
+                          setState(() {
+                            if (direccionRuta == 0) {
+                              direccionRuta = 1;
+                            } else if (direccionRuta == 1) {
+                              direccionRuta = 0;
+                            }
+                            if (nlines.length > 0) {
                               latlng.clear();
                               setState(() {});
-                              for (var i in nlines[posicion]
-                                  .ruta[direccionRuta]
-                                  .puntos) {
-                                //print(new LatLng(i.lat, i.lng));
+                              for (var i
+                              in nlines[posicion].ruta[direccionRuta].puntos) {
                                 latlng.add(new LatLng(i.lat, i.lng));
                               }
                               _OnMapCreated(mapController);
-                            },
-                            enableInfiniteScroll: false,
-                            height: 100,
-                            viewportFraction: 1),
-                        itemBuilder: (_, i, ri) {
-                          return Container(
-                              margin: EdgeInsets.symmetric(horizontal: 15.0),
-                              color: Colors.white,
-                              child: ListTile(
-                                leading: Image(
-                                    image:
-                                        AssetImage('assets/img/KaypiLogo.png')),
-                                title: Text(
-                                  nlines[posicion].nombre,
-                                  style: TextStyle(
-                                      fontSize: 15.0,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                subtitle: Text(nlines[posicion].horarios[0]),
-                                trailing: //Text(nlines[posicion].categoria)
-                                    TextButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      if (direccionRuta == 0) {
-                                        direccionRuta = 1;
-                                      } else if (direccionRuta == 1) {
-                                        direccionRuta = 0;
-                                      }
-                                      if (nlines.length > 0) {
-                                        latlng.clear();
-                                        setState(() {});
-                                        for (var i in nlines[posicion]
-                                            .ruta[direccionRuta]
-                                            .puntos) {
-                                          //print(new LatLng(i.lat, i.lng));
-                                          latlng.add(new LatLng(i.lat, i.lng));
-                                        }
-                                        _OnMapCreated(mapController);
-                                        bandera = false;
-                                      } else {
-                                        bandera = true;
-                                      }
-                                    });
-                                  },
-                                  child: direccionRuta == 0
-                                      ? Icon(Icons.arrow_downward_sharp)
-                                      : Icon(Icons.arrow_upward),
-                                ),
-
-                                // Text(nlines[posicion].,style: TextStyle(fontSize: 30.0,fontWeight: FontWeight.bold),)
-                              ));
-                        }),
-                    Divider(
-                      height: 2,
+                              bandera = false;
+                            } else {
+                              bandera = true;
+                            }
+                          });
+                        },
+                        child: direccionRuta == 0
+                            ? Icon(Icons.arrow_downward_sharp)
+                            : Icon(Icons.arrow_upward),
+                      ),
                     ),
-                    AnimatedSmoothIndicator(
-                        effect: SlideEffect(dotHeight: 8, dotWidth: 8),
-                        activeIndex: posicion,
-                        count: nlines.length),
-                    SizedBox(height: 6),
-                  ],
-                )
-              : Container(),
-          Container(
-              height: 30,
-              color: Colors.red,
-              width: double.infinity,
-              child: GestureDetector(
-                child: Text(
-                  'Limpiar Busqueda',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold),
-                  textAlign: TextAlign.center,
-                ),
-                onTap: () {
-                  markers.clear();
-                  latlngPuntos.clear();
-                  polyline.clear();
-                  nlines = [];
-                  setState(() {});
+                  );
                 },
-              )),
+              ),
+              Divider(height: 2),
+              AnimatedSmoothIndicator(
+                effect: SlideEffect(dotHeight: 8, dotWidth: 8),
+                activeIndex: posicion,
+                count: nlines.length,
+              ),
+              SizedBox(height: 6),
+            ],
+          )
+              : Container(),
         ],
       ),
+
     );
   }
 
-//metodo de marcandor y obteniendo puntos del mapa
+  //metodo de marcador y obteniendo puntos del mapa
   _handleTap(LatLng point) {
     setState(() {
       if (markers.length <= 1) {
         latlngPuntos.add(point);
+        InfoWindow infoWindow;
+        if (markers.isEmpty) {
+          infoWindow = InfoWindow(title: 'Origen');
+        } else {
+          infoWindow = InfoWindow(title: 'Destino');
+        }
         markers.add(Marker(
           markerId: MarkerId(markers.length.toString()),
           position: point,
-          infoWindow: InfoWindow(
-            title: 'I am a marker',
-          ),
-          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+          infoWindow: infoWindow,
+          icon: markers.isEmpty
+              ? BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed)
+              : BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
         ));
+
+        // Dibujar un círculo alrededor del marcador tocado
+        Circle circle = Circle(
+          circleId: CircleId('circle_${markers.length}'), // Identificador único para cada círculo
+          center: point, // El centro del círculo es el punto tocado
+          radius: 1000,
+          fillColor: //Colors.blue.withOpacity(0.3),
+          markers.length == 1
+              ? Colors.red.withOpacity(0.3)
+              : Colors.blue.withOpacity(0.3),
+          strokeWidth: 0,
+        );
+        // Agrega el círculo al conjunto de círculos
+        circles.add(circle);
+
+        // Actualiza el estado para reflejar los cambios
+        setState(() {});
       }
     });
     if (markers.length == 2) {
       _rutasProvider
           .getPuntosCercanos(points, lines, latlngPuntos)
           .then((value) => {
-                setState(() {
-                  nlines = value;
-                  if (nlines.length > 0) {
-                    latlng.clear();
-                    setState(() {});
-                    //ciclo para añadir la direccion de las lineas por los puntos seleccionados
-                    for (var i in nlines[posicion].ruta[direccionRuta].puntos) {
-                      //print(new LatLng(i.lat, i.lng));
-                      latlng.add(new LatLng(i.lat, i.lng));
-                    }
-                    _OnMapCreated(mapController);
-                    bandera = false;
-                  } else {
-                    bandera = true;
-                  }
-                })
-              });
+        setState(() {
+          nlines = value;
+          if (nlines.length > 0) {
+            latlng.clear();
+            setState(() {});
+            //ciclo para añadir la direccion de las lineas por los puntos seleccionados
+            for (var i in nlines[posicion].ruta[direccionRuta].puntos) {
+              //print(new LatLng(i.lat, i.lng));
+              latlng.add(new LatLng(i.lat, i.lng));
+            }
+            _OnMapCreated(mapController);
+            bandera = false;
+          } else {
+            bandera = true;
+          }
+        })
+      });
     }
   }
 
