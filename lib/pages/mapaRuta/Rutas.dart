@@ -301,7 +301,8 @@ class _RutasState extends State<Rutas> {
     });
     if (markers.length == 2) {
       _rutasProvider
-          .getPuntosCercanos(points, lines, latlngPuntos)
+          //.getPuntosCercanos(points, lines, latlngPuntos)
+          .getLineasCercanas(lines, latlngPuntos)
           .then((value) => {
         setState(() {
           nlines = value;

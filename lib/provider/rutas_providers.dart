@@ -15,7 +15,7 @@ class RutasProvider with ChangeNotifier {
     Map<String, double> puntoscernaos = new Map<String, double>();
     for (int i = 0; i < points.length; i++) {
       _coordinateDistance(latlng[0].latitude, latlng[0].longitude,
-                  points[i].punto.lat, points[i].punto.lng) <
+                  points[i].punto.lat, points[i].punto.lng) <=
               1000.0
           ? puntoscernaos.putIfAbsent(
               points[i].id,
@@ -23,7 +23,7 @@ class RutasProvider with ChangeNotifier {
                   points[i].punto.lat, points[i].punto.lng))
           : print('object');
       _coordinateDistance(latlng[0].latitude, latlng[0].longitude,
-                  points[i].punto.lat, points[i].punto.lng) <
+                  points[i].punto.lat, points[i].punto.lng) <=
               1000.0
           ? puntoscernaos.putIfAbsent(
               points[i].id,
@@ -59,7 +59,58 @@ class RutasProvider with ChangeNotifier {
     return nlineas;
   }
 
-  // Fórmula para calcular la distancia entre dos coordenadas.
+  Future<List<Linea>> getLineasCercanas(List<Linea> lines, List<LatLng> latlng) async {
+    List<Linea> nlineas = [];
+
+    for (int i = 0; i < lines.length; i++) {
+      bool isCloseToStart = false;
+      bool isCloseToEnd = false;
+
+      for (int j = 0; j < lines[i].ruta[0].puntos.length; j++) {
+        double distanceToStart = _coordinateDistance(
+          latlng[0].latitude,
+          latlng[0].longitude,
+          lines[i].ruta[0].puntos[j].lat,
+          lines[i].ruta[0].puntos[j].lng,
+        );
+
+        double distanceToEnd = _coordinateDistance(
+          latlng[1].latitude,
+          latlng[1].longitude,
+          lines[i].ruta[0].puntos[j].lat,
+          lines[i].ruta[0].puntos[j].lng,
+        );
+
+        if (distanceToStart <= 1000.0) {
+          isCloseToStart = true;
+        }
+
+        if (distanceToEnd <= 1000.0) {
+          isCloseToEnd = true;
+        }
+
+        // Si ya hemos encontrado puntos cercanos tanto al inicio como al fin, no es necesario seguir revisando
+        if (isCloseToStart && isCloseToEnd) {
+          nlineas.add(lines[i]);
+          break;
+        }
+      }
+    }
+
+    if (nlineas.isEmpty) {
+      Fluttertoast.showToast(
+        msg: "No se encontraron líneas que pasen por los puntos seleccionados.",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.TOP,
+        backgroundColor: Colors.blue.shade900.withOpacity(0.8),
+        textColor: Colors.white,
+      );
+    }
+
+    return nlineas;
+  }
+
+// Fórmula para calcular la distancia entre dos coordenadas.
   double _coordinateDistance(lat1, lon1, lat2, lon2) {
     var p = 0.017453292519943295; // Valor de pi / 180 para convertir a radianes
     var c = cos;
@@ -67,6 +118,9 @@ class RutasProvider with ChangeNotifier {
         c((lat2 - lat1) * p) / 2 +
         c(lat1 * p) * c(lat2 * p) * (1 - c((lon2 - lon1) * p)) / 2;
     // La distancia se devuelve en kilómetros, así que la convertimos a metros multiplicando por 1000
-    return  1000 * 12742 * asin(sqrt(a));
+    return 1000 * 12742 * asin(sqrt(a));
   }
+
+
+
 }
