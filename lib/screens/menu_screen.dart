@@ -10,7 +10,7 @@ class MenuItems {
   static const lugares = MenuItem('Lugares Turísticos', Icons.location_city);
   static const configuracion =
       MenuItem('Información y Ayuda', Icons.settings_applications);
-
+  static const notifications = MenuItem('Notificaciones', Icons.notifications);
   static const elements = <MenuItem>[
     home,
     rutas,
@@ -18,6 +18,7 @@ class MenuItems {
     paradas,
     lugares,
     configuracion,
+    notifications,
   ];
 }
 

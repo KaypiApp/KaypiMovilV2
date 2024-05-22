@@ -6,10 +6,12 @@ import 'package:flutter_kaypi/pages/info/info.dart';
 import 'package:flutter_kaypi/pages/lineasInfo/formLineas.dart';
 import 'package:flutter_kaypi/pages/lugaresTuristicos/listaLugaresTuristicos.dart';
 import 'package:flutter_kaypi/pages/mapaRuta/Rutas.dart';
+import 'package:flutter_kaypi/pages/notifications/notifications.dart';
 import 'package:flutter_kaypi/pages/puntosEstrategicos/formpuntos.dart';
 import 'package:flutter_kaypi/screens/menu_item.dart';
 import 'package:flutter_kaypi/screens/menu_screen.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
+import 'package:flutter_kaypi/pages/notifications/notifications.dart';
 
 class MenuZoom extends StatefulWidget {
   MenuZoom({Key? key}) : super(key: key);
@@ -59,6 +61,8 @@ class _MenuZoomState extends State<MenuZoom> {
         return FormPuntos();
       case MenuItems.lugares:
         return ListaLugaresTuristicos();
+      case MenuItems.notifications:
+        return Notifications();
       case MenuItems.configuracion:
        default:
         return Configuracion();
