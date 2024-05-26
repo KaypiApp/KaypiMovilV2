@@ -11,6 +11,7 @@ class Notifications extends StatefulWidget {
 
 class _NotificationsState extends State<Notifications> {
   List<Map<String, dynamic>> notifications = [];
+  List<String> shownNotificationIds = [];
 
   Future<void> fetchNotifications() async {
     try {
@@ -21,17 +22,17 @@ class _NotificationsState extends State<Notifications> {
         notifications = result;
       });
 
-      // Si hay nuevas notificaciones, muestra una notificación local
-      if (result.isNotEmpty) {
-        var newNotification =
-            result.first; // Suponiendo que el primer elemento es el nuevo
-        mostrarNotificacion(
-          newNotification['_id'], // Usando el ID como ID de la notificación
-          newNotification[
-              'nombreLinea'], // Utilizando el nombre de la línea como título
-          newNotification[
-              'descripcion'], // Utilizando la descripción como mensaje
-        );
+      // Si hay nuevas notificaciones que no se han mostrado, muestra una notificación local
+      for (var notification in result) {
+        String id = notification['_id'].toString();
+        if (!shownNotificationIds.contains(id)) {
+          mostrarNotificacion(
+            id,
+            notification['nombreLinea'],
+            notification['descripcion'],
+          );
+          shownNotificationIds.add(id);
+        }
       }
     } catch (e) {
       // Manejo de errores

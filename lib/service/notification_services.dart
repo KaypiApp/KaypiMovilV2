@@ -1,7 +1,5 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:flutter_kaypi/dbHelper/mongodb.dart';
-
-
+import 'package:flutter_kaypi/main.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
@@ -17,8 +15,8 @@ Future<void> initNotifications() async {
   await flutterLocalNotificationsPlugin.initialize(initializationSettings);
 }
 
-Future<void> mostrarNotificacion(int id, String titulo, String mensaje) async {
-  const AndroidNotificationDetails androidNotificationDetails =
+Future<void> mostrarNotificacion(String id, String nombreLinea, String descripcion) async {
+  final AndroidNotificationDetails androidNotificationDetails =
       AndroidNotificationDetails(
     'your_channel_id',
     'your_channel_name',
@@ -26,9 +24,10 @@ Future<void> mostrarNotificacion(int id, String titulo, String mensaje) async {
     priority: Priority.high,
   );
 
-  const NotificationDetails notificationDetails = NotificationDetails(
+  final NotificationDetails notificationDetails = NotificationDetails(
     android: androidNotificationDetails,
   );
 
-  await flutterLocalNotificationsPlugin.show(id, titulo, mensaje, notificationDetails);
+  await flutterLocalNotificationsPlugin.show(id.hashCode, nombreLinea, descripcion, notificationDetails);
 }
+
