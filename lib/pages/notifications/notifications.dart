@@ -23,14 +23,16 @@ class _NotificationsState extends State<Notifications> {
 
       // Si hay nuevas notificaciones, muestra una notificación local
       if (result.isNotEmpty) {
-        var newNotification = result.first; // Suponiendo que el primer elemento es el nuevo
+        var newNotification =
+            result.first; // Suponiendo que el primer elemento es el nuevo
         mostrarNotificacion(
           newNotification['_id'], // Usando el ID como ID de la notificación
-          newNotification['nombreLinea'], // Utilizando el nombre de la línea como título
-          newNotification['descripcion'], // Utilizando la descripción como mensaje
+          newNotification[
+              'nombreLinea'], // Utilizando el nombre de la línea como título
+          newNotification[
+              'descripcion'], // Utilizando la descripción como mensaje
         );
       }
-
     } catch (e) {
       // Manejo de errores
       print('Error fetching notifications: $e');
