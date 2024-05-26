@@ -30,7 +30,7 @@ class LineasApi {
     //tener su Dockerfile. Actualizar en el admin src>public>js>listaLineas.js
     //fetch('https://kaypiadmin3-z5xp9o37.b4a.run/listLineas')
     
-    http.Response response = await http.get(Uri.parse('https://kaypi-0aad18445e35.herokuapp.com/api/lineas'));
+    http.Response response = await http.get(Uri.parse('https://kaypi-fb8a2735368d.herokuapp.com/api/lineas'));
     //http.Response response = await http.get(Uri.parse('http://10.0.2.2:3000/api/lineas'));
     final body = await json.decode(response.body);
 

@@ -15,7 +15,7 @@ class PuntoEstrategicoApi {
     //fetch('https://kaypiadmin3-z5xp9o37.b4a.run/listPuntos')
 
     http.Response response = await http
-        .get(Uri.parse('https://kaypi-0aad18445e35.herokuapp.com/api/puntos'));
+        .get(Uri.parse('https://kaypi-fb8a2735368d.herokuapp.com/api/puntos'));
     //http.Response response = await http.get(Uri.parse('http://10.0.2.2:3000/api/puntos'));
     final body = await json.decode(response.body);
 
