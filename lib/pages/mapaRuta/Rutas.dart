@@ -28,7 +28,6 @@ class Rutas extends StatefulWidget {
 class _RutasState extends State<Rutas> {
   //declaracion de variables
   late GoogleMapController mapController;
-  final _carouselController = CarouselController();
   List<Linea> lines = [];
   List<Linea> nlines = [];
   List<PuntoEstrategico> points = [];
@@ -96,45 +95,6 @@ class _RutasState extends State<Rutas> {
     super.initState();
     getPuntos();
     getLineas();
-  }
-
-  void searchLines() {
-    _rutasProvider
-        .getLineasCercanas(lines, latlngPuntos)
-        .then((value) {
-      setState(() {
-        nlines = value;
-        if (nlines.isNotEmpty) {
-          latlng.clear();
-          posicion = 0; // Reiniciar la posición
-          _carouselController.jumpToPage(0); // Reiniciar a la primera posición
-          for (var punto in nlines[posicion].ruta[direccionRuta].puntos) {
-            latlng.add(LatLng(punto.lat, punto.lng));
-          }
-          _updatePolyline();
-        } else {
-          latlng.clear();
-          _updatePolyline();
-        }
-      });
-    });
-  }
-
-  void _updatePolyline() {
-    setState(() {
-      polyline.clear();
-      if (latlng.isNotEmpty) {
-        polyline.add(Polyline(
-          startCap: Cap.roundCap,
-          endCap: Cap.roundCap,
-          polylineId: PolylineId('linea'),
-          visible: true,
-          points: latlng,
-          width: 3,
-          color: Color.fromRGBO(48, 79, 254, 1.0),
-        ));
-      }
-    });
   }
 
   @override
@@ -240,7 +200,6 @@ class _RutasState extends State<Rutas> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               CarouselSlider.builder(
-                carouselController: _carouselController,
                 itemCount: nlines.length,
                 options: CarouselOptions(
                   onPageChanged: (index, reason) {
@@ -250,7 +209,7 @@ class _RutasState extends State<Rutas> {
                       for (var punto in nlines[posicion].ruta[direccionRuta].puntos) {
                         latlng.add(LatLng(punto.lat, punto.lng));
                       }
-                      _updatePolyline();
+                      _drawPolyline();
                     });
                   },
                   enableInfiniteScroll: false,
@@ -283,7 +242,7 @@ class _RutasState extends State<Rutas> {
                             for (var punto in nlines[posicion].ruta[direccionRuta].puntos) {
                               latlng.add(LatLng(punto.lat, punto.lng));
                             }
-                            _updatePolyline();
+                            _drawPolyline();
                           });
                         },
                         child: Text(
@@ -351,10 +310,8 @@ class _RutasState extends State<Rutas> {
           position: point,
           infoWindow: infoWindow,
           icon: markers.isEmpty
-              ? BitmapDescriptor.defaultMarkerWithHue(
-              BitmapDescriptor.hueRed)
-              : BitmapDescriptor.defaultMarkerWithHue(
-              BitmapDescriptor.hueBlue),
+              ? BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed)
+              : BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
         ));
 
         Circle circle = Circle(
@@ -384,20 +341,40 @@ class _RutasState extends State<Rutas> {
     });
   }
 
-  void _OnMapCreated(GoogleMapController mapController) {
-    setState(() {
-      mapController = mapController;
-      polyline.add(Polyline(
-        startCap: Cap.roundCap,
-        endCap: Cap.roundCap,
-        polylineId: PolylineId('linea'),
-        visible: true,
-        points: latlng,
-        width: 3,
-        color: Color.fromRGBO(48, 79, 254, 1.0),
-      ));
+  void searchLines() {
+    _rutasProvider
+        .getLineasCercanas(lines, latlngPuntos)
+        .then((value) {
+      setState(() {
+        nlines = value;
+        if (nlines.isNotEmpty) {
+          latlng.clear();
+          posicion = 0; // Reiniciar la posición del carousel
+          for (var punto in nlines[posicion].ruta[direccionRuta].puntos) {
+            latlng.add(LatLng(punto.lat, punto.lng));
+          }
+          _drawPolyline();
+        } else {
+          polyline.clear();
+        }
+      });
     });
   }
 
-
+  void _drawPolyline() {
+    setState(() {
+      polyline.clear();
+      if (latlng.isNotEmpty) {
+        polyline.add(Polyline(
+          startCap: Cap.roundCap,
+          endCap: Cap.roundCap,
+          polylineId: PolylineId('linea'),
+          visible: true,
+          points: latlng,
+          width: 3,
+          color: Color.fromRGBO(48, 79, 254, 1.0),
+        ));
+      }
+    });
+  }
 }
