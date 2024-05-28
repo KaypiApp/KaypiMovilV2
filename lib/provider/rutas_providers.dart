@@ -8,6 +8,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class RutasProvider with ChangeNotifier {
+  int range = 500;
   //metodo que obtiene las lineas, mas cercanas, por los puntos estrategicos con un rango definido por marcador
   Future<List<Linea>> getPuntosCercanos(List<PuntoEstrategico> points,
       List<Linea> lines, List<LatLng> latlng) async {
@@ -81,11 +82,11 @@ class RutasProvider with ChangeNotifier {
           lines[i].ruta[0].puntos[j].lng,
         );
 
-        if (distanceToStart <= 1000.0) {
+        if (distanceToStart <= range) {
           isCloseToStart = true;
         }
 
-        if (distanceToEnd <= 1000.0) {
+        if (distanceToEnd <= range) {
           isCloseToEnd = true;
         }
 
@@ -121,6 +122,13 @@ class RutasProvider with ChangeNotifier {
     return 1000 * 12742 * asin(sqrt(a));
   }
 
+  setSliderValue(int value) async {
+    range = value;
+  }
 
 
+
+  Future<double> getSliderValue() async {
+    return range * 1.00;
+  }
 }

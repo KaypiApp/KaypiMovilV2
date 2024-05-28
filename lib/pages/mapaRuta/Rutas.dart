@@ -28,7 +28,7 @@ class Rutas extends StatefulWidget {
 class _RutasState extends State<Rutas> {
   //declaracion de variables
   late GoogleMapController mapController;
-  final _carouselController = new CarouselController();
+  final _carouselController = CarouselController();
   List<Linea> lines = [];
   List<Linea> nlines = [];
   List<PuntoEstrategico> points = [];
@@ -39,20 +39,20 @@ class _RutasState extends State<Rutas> {
   Map<PolylineId, Polyline> polylines = {};
   List<LatLng> polylineCoordinates = [];
   late PolylinePoints polylinePoints;
-  //var cont = 0;
   bool bandera = false;
   int posicion = 0;
   final _rutasProvider = RutasProvider();
   int direccionRuta = 0;
   Set<Circle> circles = Set<Circle>();
+  int _sliderValue = 500; // Variable para almacenar el valor del slider
+  bool _showSlider = false; // Variable para controlar la visibilidad del slider
 
   CameraPosition _initialLocation =
-      CameraPosition(target: LatLng(-17.4139766, -66.1653224), zoom: 12.0);
+  CameraPosition(target: LatLng(-17.4139766, -66.1653224), zoom: 12.0);
   late Position _currentPosition;
 
-//metodo para obtener la ubicacion actual del dispositivo de manera asincronica
+  //metodo para obtener la ubicacion actual del dispositivo de manera asincronica
   // Method for retrieving the current location
-  // ignore: unused_element
   _getCurrentLocation() async {
     await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
         .then((Position position) async {
@@ -93,12 +93,48 @@ class _RutasState extends State<Rutas> {
 
   @override
   void initState() {
-    // ignore: todo
-    // TODO: implement initState
     super.initState();
     getPuntos();
     getLineas();
-    //_getCurrentLocation();
+  }
+
+  void searchLines() {
+    _rutasProvider
+        .getLineasCercanas(lines, latlngPuntos)
+        .then((value) {
+      setState(() {
+        nlines = value;
+        if (nlines.isNotEmpty) {
+          latlng.clear();
+          posicion = 0; // Reiniciar la posición
+          _carouselController.jumpToPage(0); // Reiniciar a la primera posición
+          for (var punto in nlines[posicion].ruta[direccionRuta].puntos) {
+            latlng.add(LatLng(punto.lat, punto.lng));
+          }
+          _updatePolyline();
+        } else {
+          latlng.clear();
+          _updatePolyline();
+        }
+      });
+    });
+  }
+
+  void _updatePolyline() {
+    setState(() {
+      polyline.clear();
+      if (latlng.isNotEmpty) {
+        polyline.add(Polyline(
+          startCap: Cap.roundCap,
+          endCap: Cap.roundCap,
+          polylineId: PolylineId('linea'),
+          visible: true,
+          points: latlng,
+          width: 3,
+          color: Color.fromRGBO(48, 79, 254, 1.0),
+        ));
+      }
+    });
   }
 
   @override
@@ -106,10 +142,7 @@ class _RutasState extends State<Rutas> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue.shade900,
-        title: Text('Rutas',
-            style: TextStyle(
-              color: Colors.white,
-            )),
+        title: Text('Rutas', style: TextStyle(color: Colors.white)),
         elevation: 0,
         leading: InkWell(
           onTap: () => ZoomDrawer.of(context)!.toggle(),
@@ -151,34 +184,58 @@ class _RutasState extends State<Rutas> {
                 Positioned(
                   top: 60,
                   right: 11,
-                  child: GestureDetector(
-                    onTap: () {
-                      markers.clear();
-                      latlngPuntos.clear();
-                      polyline.clear();
-                      nlines = [];
-                      setState(() {});
-                      posicion = 0;
-                      circles.clear();
-                    },
-                    child: Container(
-                      padding: EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.blue.shade900,
+                  child: Column(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          markers.clear();
+                          latlngPuntos.clear();
+                          polyline.clear();
+                          nlines = [];
+                          setState(() {});
+                          posicion = 0;
+                          circles.clear();
+                        },
+                        child: Container(
+                          padding: EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.blue.shade900,
+                          ),
+                          child: Icon(
+                            Icons.delete_sweep_outlined,
+                            color: Colors.white,
+                            size: 24,
+                          ),
+                        ),
                       ),
-                      child: Icon(
-                        Icons.delete_sweep_outlined,
-                        color: Colors.white,
-                        size: 24,
+                      SizedBox(height: 8),
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _showSlider = !_showSlider;
+                          });
+                        },
+                        child: Container(
+                          padding: EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.green.shade600,
+                          ),
+                          child: Icon(
+                            Icons.tune,
+                            color: Colors.white,
+                            size: 24,
+                          ),
+                        ),
                       ),
-                    ),
+                    ],
                   ),
                 ),
               ],
             ),
           ),
-          nlines.length > 0
+          nlines.isNotEmpty
               ? Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -187,13 +244,14 @@ class _RutasState extends State<Rutas> {
                 itemCount: nlines.length,
                 options: CarouselOptions(
                   onPageChanged: (index, reason) {
-                    posicion = index;
-                    latlng.clear();
-                    setState(() {});
-                    for (var i in nlines[posicion].ruta[direccionRuta].puntos) {
-                      latlng.add(new LatLng(i.lat, i.lng));
-                    }
-                    _OnMapCreated(mapController);
+                    setState(() {
+                      posicion = index;
+                      latlng.clear();
+                      for (var punto in nlines[posicion].ruta[direccionRuta].puntos) {
+                        latlng.add(LatLng(punto.lat, punto.lng));
+                      }
+                      _updatePolyline();
+                    });
                   },
                   enableInfiniteScroll: false,
                   height: 100,
@@ -206,62 +264,78 @@ class _RutasState extends State<Rutas> {
                     child: ListTile(
                       leading: Image(
                         image: AssetImage('assets/img/KaypiLogo.png'),
+                        width: 30,
+                        height: 30,
                       ),
                       title: Text(
-                        nlines[posicion].nombre,
-                        style: TextStyle(
-                          fontSize: 15.0,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        nlines[i].nombre,
+                        style: TextStyle(color: Colors.blue.shade900),
                       ),
-                      subtitle: Text(nlines[posicion].horarios[0]),
-                      trailing: TextButton(
+                      subtitle: Text(
+                        nlines[i].horarios[0],
+                        style: TextStyle(color: Colors.blue.shade900),
+                      ),
+                      trailing: ElevatedButton(
                         onPressed: () {
                           setState(() {
-                            if (direccionRuta == 0) {
-                              direccionRuta = 1;
-                            } else if (direccionRuta == 1) {
-                              direccionRuta = 0;
+                            direccionRuta = direccionRuta == 0 ? 1 : 0;
+                            latlng.clear();
+                            for (var punto in nlines[posicion].ruta[direccionRuta].puntos) {
+                              latlng.add(LatLng(punto.lat, punto.lng));
                             }
-                            if (nlines.length > 0) {
-                              latlng.clear();
-                              setState(() {});
-                              for (var i
-                              in nlines[posicion].ruta[direccionRuta].puntos) {
-                                latlng.add(new LatLng(i.lat, i.lng));
-                              }
-                              _OnMapCreated(mapController);
-                              bandera = false;
-                            } else {
-                              bandera = true;
-                            }
+                            _updatePolyline();
                           });
                         },
-                        child: direccionRuta == 0
-                            ? Icon(Icons.arrow_downward_sharp)
-                            : Icon(Icons.arrow_upward),
+                        child: Text(
+                          direccionRuta == 0 ? 'IDA' : 'VUELTA',
+                          style: TextStyle(color: Colors.blue.shade900),
+                        ),
                       ),
                     ),
                   );
                 },
               ),
-              Divider(height: 2),
               AnimatedSmoothIndicator(
-                effect: SlideEffect(dotHeight: 8, dotWidth: 8),
                 activeIndex: posicion,
                 count: nlines.length,
               ),
-              SizedBox(height: 6),
             ],
           )
-              : Container(),
+              : Text("Para ajustar el rango de búsqueda presione el botón verde."),
+          SizedBox(height: 16),
+          if (_showSlider)
+            Column(
+              children: [
+                Slider(
+                  value: _sliderValue.toDouble(),
+                  min: 100,
+                  max: 1000,
+                  divisions: 900,
+                  label: _sliderValue.toString(),
+                  activeColor: Colors.blue.shade900,
+                  inactiveColor: Colors.blue.shade300,
+                  onChanged: (double newValue) {
+                    setState(() {
+                      _sliderValue = newValue.toInt();
+                    });
+                  },
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    await _rutasProvider.setSliderValue(_sliderValue);
+                    await _updateCircleRadius();
+                    searchLines();
+                  },
+                  child: Text('Ajustar rango',
+                      style: TextStyle(color: Colors.blue.shade900)),
+                ),
+              ],
+            ),
         ],
       ),
-
     );
   }
 
-  //metodo de marcador y obteniendo puntos del mapa
   _handleTap(LatLng point) {
     setState(() {
       if (markers.length <= 1) {
@@ -277,66 +351,53 @@ class _RutasState extends State<Rutas> {
           position: point,
           infoWindow: infoWindow,
           icon: markers.isEmpty
-              ? BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed)
-              : BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+              ? BitmapDescriptor.defaultMarkerWithHue(
+              BitmapDescriptor.hueRed)
+              : BitmapDescriptor.defaultMarkerWithHue(
+              BitmapDescriptor.hueBlue),
         ));
 
-        // Dibujar un círculo alrededor del marcador tocado
         Circle circle = Circle(
-          circleId: CircleId('circle_${markers.length}'), // Identificador único para cada círculo
-          center: point, // El centro del círculo es el punto tocado
-          radius: 1000,
-          fillColor: //Colors.blue.withOpacity(0.3),
-          markers.length == 1
+          circleId: CircleId('circle_${markers.length}'),
+          center: point,
+          radius: _sliderValue * 1.0,
+          fillColor: markers.length == 1
               ? Colors.red.withOpacity(0.3)
               : Colors.blue.withOpacity(0.3),
           strokeWidth: 0,
         );
-        // Agrega el círculo al conjunto de círculos
         circles.add(circle);
-
-        // Actualiza el estado para reflejar los cambios
         setState(() {});
       }
     });
     if (markers.length == 2) {
-      _rutasProvider
-          //.getPuntosCercanos(points, lines, latlngPuntos)
-          .getLineasCercanas(lines, latlngPuntos)
-          .then((value) => {
-        setState(() {
-          nlines = value;
-          if (nlines.length > 0) {
-            latlng.clear();
-            setState(() {});
-            //ciclo para añadir la direccion de las lineas por los puntos seleccionados
-            for (var i in nlines[posicion].ruta[direccionRuta].puntos) {
-              //print(new LatLng(i.lat, i.lng));
-              latlng.add(new LatLng(i.lat, i.lng));
-            }
-            _OnMapCreated(mapController);
-            bandera = false;
-          } else {
-            bandera = true;
-          }
-        })
-      });
+      searchLines();
     }
   }
 
-//dibujando el trazo de cada linea que pasa por los puntos marcados
-  // ignore: non_constant_identifier_names
+  Future<void> _updateCircleRadius() async {
+    double newRadius = await _rutasProvider.getSliderValue();
+    setState(() {
+      circles = circles.map((circle) {
+        return circle.copyWith(radiusParam: newRadius);
+      }).toSet();
+    });
+  }
+
   void _OnMapCreated(GoogleMapController mapController) {
     setState(() {
       mapController = mapController;
       polyline.add(Polyline(
-          startCap: Cap.roundCap,
-          endCap: Cap.roundCap,
-          polylineId: PolylineId('linea'),
-          visible: true,
-          points: latlng,
-          width: 3,
-          color: Color.fromRGBO(48, 79, 254, 1.0)));
+        startCap: Cap.roundCap,
+        endCap: Cap.roundCap,
+        polylineId: PolylineId('linea'),
+        visible: true,
+        points: latlng,
+        width: 3,
+        color: Color.fromRGBO(48, 79, 254, 1.0),
+      ));
     });
   }
+
+
 }
