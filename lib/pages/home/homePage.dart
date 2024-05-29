@@ -4,7 +4,17 @@ import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:flutter_kaypi/pages/Routes/routesPage.dart';
 import 'package:flutter_kaypi/pages/Routes/ruta.dart';
 
-//referencia a la vista ventana_prueba en pages
+// Define los nuevos colores
+//const Color primaryColor = Color(0xFFF2E6CF);
+//const Color secondaryColor = Color(0xFF9CD2D3);
+//const Color accentColor1 = Color(0xFF114C5F);
+
+const Color primaryColor = Color(0xFFF2E6CF);
+const Color secondaryColor = Color(0xFF9CD2D3);
+const Color accentColor1 = Color(0xFF0E5C77);
+const Color accentColor2 = Color.fromARGB(255, 13, 63, 80);
+
+const Color colorboton1 = Color(0xFFF87465);
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -38,7 +48,7 @@ class _HomePageState extends State<HomePage> {
           onTap: () => ZoomDrawer.of(context)!.toggle(),
           child: Icon(
             Icons.menu,
-            color: Colors.blue.shade900,
+            color: const Color.fromARGB(255, 0, 0, 0),
             size: 28,
           ),
         ),
@@ -48,9 +58,13 @@ class _HomePageState extends State<HomePage> {
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              Colors.white,
+              /*Colors.white,
               Colors.blue.shade400,
-              Colors.blue.shade900,
+              Colors.blue.shade900,*/
+              primaryColor,
+              secondaryColor,
+              accentColor1,
+              accentColor2,
             ],
             begin: Alignment.topRight,
             end: Alignment.bottomLeft,
@@ -66,7 +80,8 @@ class _HomePageState extends State<HomePage> {
               children: <Widget>[
                 Center(
                   child: Image.asset(
-                    'assets/img/KaypiLogo.png',
+                    //'assets/img/KaypiLogo.png',
+                    'assets/img/Kaypi3D.png',
                     height: 220,
                   ),
                 ),
@@ -110,24 +125,16 @@ class _HomePageState extends State<HomePage> {
                   onPressed: () => ZoomDrawer.of(context)!.toggle(),
                   child: const Text(
                     'INICIAR',
-                    style: TextStyle(color: Colors.white, fontSize: 18),
+                    style: TextStyle(color: Color.fromARGB(255, 255, 255, 255), fontSize: 18),
                   ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue.shade900,
+                    foregroundColor: colorboton1, backgroundColor: Colors.transparent, // Color del texto
+                    side: BorderSide(color: colorboton1), // Borde del color definido
                     fixedSize: Size(200, 40),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(50),
                     ),
                   ),
-                ),
-                SizedBox(height: 20), // Espacio entre botones
-                ElevatedButton(
-                  onPressed: () {
-                    // Método para mostrar notificaciones
-                    mostrarNotificacion(id, nombreLinea, descripcion);
-                    print("Se mandó la notificación");
-                  },
-                  child: Text('Mostrar Notificaciones'),
                 ),
               ],
             ),
