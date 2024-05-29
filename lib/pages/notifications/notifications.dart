@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_kaypi/dbHelper/mongodb.dart';
 import 'package:flutter_kaypi/service/notification_services.dart'; // Importa el archivo de servicios de notificación
+import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 
 class Notifications extends StatefulWidget {
   const Notifications({Key? key}) : super(key: key);
@@ -52,8 +53,18 @@ class _NotificationsState extends State<Notifications> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
+        extendBodyBehindAppBar: false,
         appBar: AppBar(
-          title: Text('Notificaciones'),
+          title: Text("Notificaciones",
+              style: TextStyle(
+                color: Colors.white,
+              )),
+          backgroundColor: Colors.blue.shade900,
+          elevation: 0,
+          leading: InkWell(
+            onTap: () => ZoomDrawer.of(context)!.toggle(),
+            child: Icon(Icons.menu, color: Colors.white, size: 28,),
+          ),
         ),
         body: notifications.isEmpty
             ? Center(

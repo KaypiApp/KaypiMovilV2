@@ -16,7 +16,6 @@ class _ConfiguracionState extends State<Configuracion> {
     return MaterialApp(
        debugShowCheckedModeBanner: false,
         home: Scaffold(
-          
           extendBodyBehindAppBar: false,
           appBar: AppBar(
                   title: Text("Información y Ayuda",
