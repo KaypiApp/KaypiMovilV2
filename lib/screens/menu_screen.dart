@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_kaypi/screens/menu_item.dart';
 
+const Color colorFondo = Color(0xFF0E5C77);
+
 class MenuItems {
   static const home = MenuItem('Home', Icons.home);
   static const rutas = MenuItem('Rutas', Icons.add_road_rounded);
@@ -35,7 +37,7 @@ class MenuScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blue.shade900,
+      backgroundColor: colorFondo,
       body: Container(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
