@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_kaypi/screens/menu_item.dart';
 
-const Color colorFondo = Color(0xFF0E5C77);
+const Color colorFondo = Color.fromARGB(255, 46, 105, 124);
 
 class MenuItems {
   static const home = MenuItem('Home', Icons.home);
