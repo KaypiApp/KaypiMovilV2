@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_kaypi/pages/ayuda/CardInfo.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 
+const Color colorPage2 = Color(0xFFf2e6cf);
+const Color colorCabecera2 = Color(0xFF387990);
+
 class AyudaKaypi extends StatefulWidget {
   const AyudaKaypi({Key? key}) : super(key: key);
 
@@ -175,10 +178,10 @@ class _AyudaKaypiState extends State<AyudaKaypi> {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         home: Scaffold(
-          backgroundColor: Colors.blue.shade100,
+          backgroundColor: colorPage2,
           extendBodyBehindAppBar: true,
           appBar: AppBar(
-            backgroundColor: Colors.blue.shade900,
+            backgroundColor: colorCabecera2,
             elevation: 0,
 
             ///se establece el nombre y los detalles del titulo de la ventana
