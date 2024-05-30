@@ -403,7 +403,7 @@ class PuntosMarcadorGoogle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: Text("VISTA DE MARCADOR", style: TextStyle(color: Colors.white)),
+          title: Text("Vista de Marcador", style: TextStyle(color: Colors.white)),
           iconTheme: IconThemeData(
             color: Colors.white,
           ),

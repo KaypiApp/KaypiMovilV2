@@ -4,6 +4,9 @@ import 'package:flutter_kaypi/pages/model/linea.dart';
 import 'package:flutter_kaypi/provider/lineas_api.dart';
 import 'package:flutter_kaypi/pages/puntosEstrategicos/formpuntos.dart';
 
+const Color colorPage13 = Color.fromARGB(255, 239, 234, 225);
+const Color colorCabecera13 = Color(0xFF387990);
+
 // ignore: must_be_immutable
 class LineasPuntos extends StatefulWidget {
   var puntos;
@@ -21,7 +24,7 @@ class _LineasPuntosState extends State<LineasPuntos> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        backgroundColor: Colors.blue.shade900,
+        backgroundColor: colorCabecera13, // Color de cabecera
         elevation: 0,
         leading: InkWell(
           onTap: () => Navigator.of(context).pop(),
@@ -33,6 +36,7 @@ class _LineasPuntosState extends State<LineasPuntos> {
         ),
         title: Text('Lineas', style: TextStyle(color: Colors.white)),
       ),
+      backgroundColor: colorPage13, // Color de fondo
       body: _lista(context),
     );
   }
@@ -79,7 +83,7 @@ class _LineasPuntosState extends State<LineasPuntos> {
           )),
           leading: CircleAvatar(
             //backgroundImage: AssetImage(linea.imagen),
-            backgroundImage: AssetImage('assets/img/KaypiLogo.png'),
+            backgroundImage: AssetImage('assets/img/KaypiLogoNegro.png'),
             backgroundColor: Colors.transparent,
           ),
           title: Text(
@@ -87,13 +91,13 @@ class _LineasPuntosState extends State<LineasPuntos> {
             style: TextStyle(
                 fontSize: 18.0,
                 fontWeight: FontWeight.bold,
-                color: Colors.blue.shade900),
+                color: const Color.fromARGB(255, 0, 0, 0)),
           ),
           subtitle: Text(linea.categoria),
           trailing: Icon(
             Icons.arrow_forward_ios_rounded,
             size: 30.0,
-            color: Colors.blue.shade900,
+            color: const Color.fromARGB(255, 0, 0, 0),
           ),
         );
       },
