@@ -5,16 +5,17 @@ import 'package:flutter_kaypi/pages/Routes/routesPage.dart';
 import 'package:flutter_kaypi/pages/Routes/ruta.dart';
 
 // Define los nuevos colores
-//const Color primaryColor = Color(0xFFF2E6CF);
-//const Color secondaryColor = Color(0xFF9CD2D3);
-//const Color accentColor1 = Color(0xFF114C5F);
+
 
 const Color primaryColor = Color(0xFFF2E6CF);
-const Color secondaryColor = Color(0xFF9CD2D3);
+const Color secondaryColor = Color(0xFF0799B6);
 const Color accentColor1 = Color(0xFF0E5C77);
-const Color accentColor2 = Color.fromARGB(255, 13, 63, 80);
 
-const Color colorboton1 = Color(0xFFF87465);
+
+const Color colorboton1 = Color(0xFF0E5C77);
+const Color colorBorde = Color(0xFF0799B6);
+const Color colorBorde2 = Color(0xFFF2E6CF);
+
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -64,7 +65,7 @@ class _HomePageState extends State<HomePage> {
               primaryColor,
               secondaryColor,
               accentColor1,
-              accentColor2,
+             
             ],
             begin: Alignment.topRight,
             end: Alignment.bottomLeft,
@@ -81,8 +82,8 @@ class _HomePageState extends State<HomePage> {
                 Center(
                   child: Image.asset(
                     //'assets/img/KaypiLogo.png',
-                    'assets/img/Kaypi3D.png',
-                    height: 220,
+                    'assets/img/LogoKaypi.png',
+                    height: 260,
                   ),
                 ),
                 Padding(
@@ -129,7 +130,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                   style: ElevatedButton.styleFrom(
                     foregroundColor: colorboton1, backgroundColor: Colors.transparent, // Color del texto
-                    side: BorderSide(color: colorboton1), // Borde del color definido
+                    side: BorderSide(color: colorBorde2 ,width: 2.0), // Borde del color definido
                     fixedSize: Size(200, 40),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(50),
