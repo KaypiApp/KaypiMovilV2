@@ -17,240 +17,247 @@ class FormLineas extends StatefulWidget {
 
 class _FormLineasState extends State<FormLineas> {
   late Future<List<Linea>> futureLineas;
-  bool _isMinBusVisible = true;
-  bool _isTaxTruVisible = true;
-  bool _isMicroVisible = true;
-
-  @override
-  void initState() {
-    futureLineas = lineasApi.cargarData();
-    lineasApi.cargarData().then((data) {
-      setState(() {
-        lines = filteredLines = data;
-      });
-    });
-    super.initState();
-  }
-
-  void _filterLines(value) {
-    setState(() {
-      filteredLines = lines
-          .where((line) =>
-              line.nombre.toLowerCase().contains(value.toLowerCase()))
-          .toList();
-    });
-  }
-
-  List lines = [];
-  List filteredLines = [];
+  List<Linea> lines = [];
+  List<Linea> filteredLines = [];
   bool isSearching = false;
 
   @override
+  void initState() {
+    super.initState();
+    futureLineas = lineasApi.cargarData();
+    futureLineas.then((data) {
+      setState(() {
+        lines = filteredLines = data;
+        _sortLines();
+      });
+    });
+  }
+
+  void _filterLines(String value) {
+    setState(() {
+      filteredLines = lines
+          .where((line) =>
+          line.nombre.toLowerCase().contains(value.toLowerCase()))
+          .toList();
+      _sortLines();
+    });
+  }
+
+  void _sortLines() {
+    filteredLines.sort((a, b) {
+      final regex = RegExp(r'^Línea (\d+|\D)$');
+      final matchA = regex.firstMatch(a.nombre);
+      final matchB = regex.firstMatch(b.nombre);
+
+      if (matchA != null && matchB != null) {
+        final partA = matchA.group(1)!;
+        final partB = matchB.group(1)!;
+
+        final isNumA = int.tryParse(partA);
+        final isNumB = int.tryParse(partB);
+
+        if (isNumA != null && isNumB != null) {
+          return isNumA.compareTo(isNumB);
+        } else if (isNumA == null && isNumB == null) {
+          return partA.compareTo(partB);
+        } else {
+          return isNumA == null ? -1 : 1;
+        }
+      }
+      return a.nombre.compareTo(b.nombre);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) => Scaffold(
-        backgroundColor: colorPage5,
-        extendBodyBehindAppBar: true,
-        appBar: AppBar(
-          backgroundColor: colorCabecera5,
-          elevation: 0,
-          title: !isSearching
-              ? Text(
-                  'Líneas de Transporte',
-                  style: TextStyle(color: Colors.white),
-                )
-              : TextField(
-                  onChanged: (value) {
-                    _filterLines(value);
-                  },
-                  style: TextStyle(color: Colors.white),
-                  decoration: InputDecoration(
-                    icon: Icon(Icons.search, color: Colors.white),
-                    hintText: "Ejemplo: 120",
-                    hintStyle: TextStyle(
-                      color: Colors.white,
-                      decoration: TextDecoration.none,
-                    ),
-                    errorBorder: InputBorder.none,
-                    disabledBorder: InputBorder.none,
-                  ),
-                ),
-          actions: <Widget>[
-            isSearching
-                ? IconButton(
-                    icon: Icon(Icons.cancel),
-                    color: Colors.white,
-                    onPressed: () {
-                      setState(() {
-                        this.isSearching = false;
-                        filteredLines = lines;
-                      });
-                    },
-                  )
-                : IconButton(
-                    icon: Icon(Icons.search),
-                    color: Colors.white,
-                    onPressed: () {
-                      setState(() {
-                        this.isSearching = true;
-                      });
-                    },
-                  )
-          ],
-          leading: InkWell(
-            onTap: () => ZoomDrawer.of(context)!.toggle(),
-            child: Icon(
-              Icons.menu,
-              color: Colors.white,
-              size: 28,
-            ),
+    backgroundColor: colorPage5,
+    extendBodyBehindAppBar: true,
+    appBar: AppBar(
+      backgroundColor: colorCabecera5,
+      elevation: 0,
+      title: !isSearching
+          ? Text(
+        'Líneas de Transporte',
+        style: TextStyle(color: Colors.white),
+      )
+          : TextField(
+        onChanged: (value) {
+          _filterLines(value);
+        },
+        style: TextStyle(color: Colors.white),
+        decoration: InputDecoration(
+          icon: Icon(Icons.search, color: Colors.white),
+          hintText: "Ejemplo: 120",
+          hintStyle: TextStyle(
+            color: Colors.white,
+            decoration: TextDecoration.none,
           ),
+          errorBorder: InputBorder.none,
+          disabledBorder: InputBorder.none,
         ),
-        body: !isSearching
-            ? _lista(context)
-            : Container(
-                padding: EdgeInsets.all(10),
-                child: filteredLines.length > 0
-                    ? ListView.builder(
-                        itemCount: filteredLines.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return GestureDetector(
-                            onTap: () => Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    LineaPage(linea: filteredLines[index]),
-                              ),
-                            ),
-                            child: Card(
-                              elevation: 10,
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 10, horizontal: 8),
-                                child: Text(
-                                  filteredLines[index].nombre,
-                                  style: TextStyle(
-                                      fontSize: 18,
-                                      color: Colors.black),
-                                ),
-                              ),
-                            ),
-                          );
-                        })
-                    : Center(
-                        child: CircularProgressIndicator(),
-                      ),
+      ),
+      actions: <Widget>[
+        isSearching
+            ? IconButton(
+          icon: Icon(Icons.cancel),
+          color: Colors.white,
+          onPressed: () {
+            setState(() {
+              this.isSearching = false;
+              filteredLines = lines;
+              _sortLines();
+            });
+          },
+        )
+            : IconButton(
+          icon: Icon(Icons.search),
+          color: Colors.white,
+          onPressed: () {
+            setState(() {
+              this.isSearching = true;
+            });
+          },
+        )
+      ],
+      leading: InkWell(
+        onTap: () => ZoomDrawer.of(context)!.toggle(),
+        child: Icon(
+          Icons.menu,
+          color: Colors.white,
+          size: 28,
+        ),
+      ),
+    ),
+    body: !isSearching
+        ? _lista(context)
+        : Container(
+      padding: EdgeInsets.all(10),
+      child: filteredLines.isNotEmpty
+          ? ListView.builder(
+        itemCount: filteredLines.length,
+        itemBuilder: (BuildContext context, int index) {
+          return GestureDetector(
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) =>
+                    LineaPage(linea: filteredLines[index]),
               ),
-      );
+            ),
+            child: Card(
+              elevation: 10,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                    vertical: 10, horizontal: 8),
+                child: Text(
+                  filteredLines[index].nombre,
+                  style: TextStyle(
+                      fontSize: 18, color: Colors.black),
+                ),
+              ),
+            ),
+          );
+        },
+      )
+          : Center(
+        child: CircularProgressIndicator(),
+      ),
+    ),
+  );
 
   List<String> items = [];
   List<String> listaCat = [];
-  List<Linea> listaInicial = [];
   List<Linea> listaFinal = [];
   String dropdownvalue = "Todo";
 
   Widget _lista(context) => FutureBuilder<List<Linea>>(
-        future: futureLineas,
-        initialData: [],
-        builder: (context, snapshot) {
-          final lineas = snapshot.data;
-          switch (snapshot.connectionState) {
-            case ConnectionState.waiting:
-              return Center(
-                  child: CircularProgressIndicator(
+    future: futureLineas,
+    initialData: [],
+    builder: (context, snapshot) {
+      final lineas = snapshot.data;
+      switch (snapshot.connectionState) {
+        case ConnectionState.waiting:
+          return Center(
+              child: CircularProgressIndicator(
                 color: Colors.black,
               ));
-            default:
-              if (snapshot.hasError) {
-                return Center(child: Text('Error'));
-              }
+        default:
+          if (snapshot.hasError) {
+            return Center(child: Text('Error'));
+          }
 
-              if (!snapshot.hasData) {
-                return Center(child: Text('No hay data'));
-              }
-              listaCat = getCategories(lineas!);
-              items = listaCat;
-              listaFinal = getLinesFromCat(dropdownvalue.toString(), lineas);
-              return RefreshIndicator(
-                child: ListView(children: [
-                  ListTile(
-                    tileColor: Colors.white,
-                    title: Text(
-                      "Categorías",
-                      style: TextStyle(
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black),
-                    ),
-                    trailing: DropdownButton(
-                      value: dropdownvalue,
-                      iconSize: 35,
-                      underline:
-                          Container(color: Colors.black, height: 1.5),
-                      style: const TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18.0,
-                      ),
-                      icon: Icon(
-                        Icons.keyboard_arrow_down,
-                        color: Colors.black,
-                      ),
-                      items: items.map((String items) {
-                        return DropdownMenuItem(
-                            value: items, child: Text(items));
-                      }).toList(),
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          dropdownvalue = newValue!;
-                          listaFinal =
-                              getLinesFromCat(dropdownvalue.toString(), lineas);
-                        });
-                      },
-                    ),
+          if (!snapshot.hasData) {
+            return Center(child: Text('No hay data'));
+          }
+          listaCat = getCategories(lineas!);
+          items = listaCat;
+          listaFinal = getLinesFromCat(dropdownvalue, lineas);
+          _sortLines();
+          return RefreshIndicator(
+            child: ListView(children: [
+              ListTile(
+                tileColor: Colors.white,
+                title: Text(
+                  "Categorías",
+                  style: TextStyle(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black),
+                ),
+                trailing: DropdownButton(
+                  value: dropdownvalue,
+                  iconSize: 35,
+                  underline: Container(color: Colors.black, height: 1.5),
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18.0,
                   ),
-                  Divider(
-                    height: 5.0,
+                  icon: Icon(
+                    Icons.keyboard_arrow_down,
                     color: Colors.black,
                   ),
-                  _buildLineas(listaFinal, context, _isMinBusVisible),
-                ]),
-                onRefresh: _pullRefresh,
-              );
-          }
-        },
-      );
-
-  getLinesFromCat(String cat, List<Linea> lineas) {
-    List<Linea> res = [];
-    Linea linea;
-    if (cat == "Todo") {
-      res = lineas;
-    } else {
-      for (int i = 0; i < lineas.length; i++) {
-        linea = lineas[i];
-        if (linea.categoria == cat) {
-          res.add(linea);
-        }
+                  items: items.map((String items) {
+                    return DropdownMenuItem(
+                        value: items, child: Text(items));
+                  }).toList(),
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      dropdownvalue = newValue!;
+                      listaFinal =
+                          getLinesFromCat(dropdownvalue, lineas);
+                      _sortLines();
+                    });
+                  },
+                ),
+              ),
+              Divider(
+                height: 5.0,
+                color: Colors.black,
+              ),
+              _buildLineas(listaFinal, context),
+            ]),
+            onRefresh: _pullRefresh,
+          );
       }
-    }
+    },
+  );
 
-    return res;
+  List<Linea> getLinesFromCat(String cat, List<Linea> lineas) {
+    if (cat == "Todo") {
+      return lineas;
+    }
+    return lineas.where((linea) => linea.categoria == cat).toList();
   }
 
-  getCategories(List<Linea> lineas) {
-    List<String> res = [];
-    Linea linea;
-    var lineaAUX;
-    res.add("Todo");
-    var aux = 0;
-    res.add(lineas[0].categoria);
-    for (int i = 0; i < lineas.length; i++) {
-      linea = lineas[i];
-      res.add(linea.categoria);
+  List<String> getCategories(List<Linea> lineas) {
+    Set<String> categories = {"Todo"};
+    for (var linea in lineas) {
+      categories.add(linea.categoria);
     }
-    lineaAUX = res.toSet().toList();
-    return lineaAUX;
+    return categories.toList();
   }
 
-  Widget _buildLineas(List<Linea> lineas, context, _isVisible) {
+  Widget _buildLineas(List<Linea> lineas, context) {
     return ListView.builder(
       physics: BouncingScrollPhysics(),
       padding: EdgeInsets.zero,
@@ -277,7 +284,7 @@ class _FormLineasState extends State<FormLineas> {
             ),
           ),
           title: Text(
-            _getTitle(linea.nombre),
+            linea.nombre,
             style: TextStyle(
                 fontSize: 18.0,
                 fontWeight: FontWeight.bold,
@@ -309,7 +316,7 @@ class _FormLineasState extends State<FormLineas> {
   }
 
   String _getTitle(String nombre) {
-    return nombre.startsWith("Linea ") ? nombre.substring(6) : nombre;
+    return nombre.startsWith("Línea ") ? nombre.substring(6) : nombre;
   }
 
   Color _getRandomColor() {
@@ -331,9 +338,12 @@ class _FormLineasState extends State<FormLineas> {
   }
 
   Future<void> _pullRefresh() async {
-    List<Linea> freshLines = await lineasApi.cargarData();
-    setState(() {
-      futureLineas = Future.value(freshLines);
+    futureLineas = lineasApi.cargarData();
+    futureLineas.then((data) {
+      setState(() {
+        lines = filteredLines = data;
+        _sortLines();
+      });
     });
   }
 }

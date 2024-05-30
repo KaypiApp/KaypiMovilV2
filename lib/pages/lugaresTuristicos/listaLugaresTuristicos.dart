@@ -148,7 +148,7 @@ class _ListaLugaresTuristicosState extends State<ListaLugaresTuristicos> {
 
     elementos.add(new Lugar(
         "Parque Mariscal Santa Cruz",
-        "Se destaca como el espacio recreativo mas grande de la cuidad de Cochabamba.",
+        "Se destaca como el espacio recreativo mas grande de la ciudad de Cochabamba.",
         "assets/img/lugaresTuristicosImg/acu2.jpg",
         [
           /*"El objetivo de su creación fue la sensibilización ciudadana, recuperación y preservación del medio ambiente",
@@ -197,10 +197,8 @@ class _ListaLugaresTuristicosState extends State<ListaLugaresTuristicos> {
                     tag: elementos[index],
                     child: Image.asset(
                       elementos[index].imagen,
-                      
-                      //height: 100,
+                      height: 100,
                       width: 150,
-                      
                     ),
                   ),
                   Expanded(
@@ -213,7 +211,7 @@ class _ListaLugaresTuristicosState extends State<ListaLugaresTuristicos> {
                           new Expanded(
                             child: Text(
                               elementos[index].titulo,
-                              textAlign: TextAlign.left,
+                              textAlign: TextAlign.center,
                               style: new TextStyle(
                                   fontSize: 18.0,
                                   color: Colors.black,

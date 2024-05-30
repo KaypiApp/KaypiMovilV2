@@ -8,7 +8,6 @@ import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-
 const Color colorPage13 = Color.fromARGB(255, 239, 234, 225);
 const Color colorCabecera13 = Color(0xFF387990);
 
@@ -27,21 +26,25 @@ class _FormPuntosState extends State<FormPuntos> {
    List points = [];
    List filteredPoints = [];
    bool isSearching = false;
+
    void initState() {
      futurePoints = puntoEstrategicoApi.cargarData();
     puntoEstrategicoApi.cargarData().then((data) {
       setState(() {
         points = filteredPoints = data;
+        points.sort((a, b) => a.nombre.compareTo(b.nombre));
       });
     });
     super.initState();
   }
+
     void _filterPoints(value) {
     setState(() {
       filteredPoints = points
           .where((point) =>
               point.nombre.toLowerCase().contains(value.toLowerCase()))
           .toList();
+      filteredPoints.sort((a, b) => a.nombre.compareTo(b.nombre));
     });
   }
  
@@ -123,7 +126,6 @@ class _FormPuntosState extends State<FormPuntos> {
                     onTap: ()=> Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) =>_buildPuntoEspecifico(filteredPoints[index],context),
                     )),
-
                     child: Card(
                       elevation: 10,
                       child: Padding(
@@ -140,38 +142,32 @@ class _FormPuntosState extends State<FormPuntos> {
             : Center(
                 child: CircularProgressIndicator(),
               ),
-
       ) 
       );
   }
+
   Widget _lista(context) => FutureBuilder<List<PuntoEstrategico>>(
-        future: futurePoints,
-        initialData: [],
-        // ignore: non_constant_identifier_names
-        builder: (context, AsyncSnapshot<dynamic> snapshot) {
-          final lineas = snapshot.data;
+    future: futurePoints,
+    initialData: [],
+    builder: (context, AsyncSnapshot<dynamic> snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return Center(child: CircularProgressIndicator());
+      } else if (snapshot.hasError) {
+        return Center(child: Text('Error'));
+      } else if (!snapshot.hasData) {
+        return Center(child: Text('No hay data'));
+      } else {
+        List<PuntoEstrategico> lineas = snapshot.data;
+        // Ordenar alfabéticamente
+        lineas.sort((a, b) => a.nombre.compareTo(b.nombre));
+        return RefreshIndicator(
+          child: _buildLineas(lineas, context),
+          onRefresh: _pullRefresh,
+        );
+      }
+    },
+  );
 
-          switch (snapshot.connectionState) {
-            case ConnectionState.waiting:
-              return Center(child: CircularProgressIndicator());
-            default:
-              if (snapshot.hasError) {
-                return Center(child: Text('Error'));
-              }
-
-              if (!snapshot.hasData) {
-                return Center(child: Text('No hay data'));
-              }
-
-              return  RefreshIndicator(
-                  child: _buildLineas(lineas!, context),
-                  onRefresh: _pullRefresh,
-              );
-              
-              
-          }
-        },
-      );
 
   Widget _buildLineas(List<PuntoEstrategico> puntosEstrategicos, context) {
     return ListView.builder(
@@ -181,20 +177,16 @@ class _FormPuntosState extends State<FormPuntos> {
           final puntos = puntosEstrategicos[index];
           return Card(
             color: Colors.white,
-            
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
             margin: EdgeInsets.all(15),
             elevation: 10,
-           
-
             child: Container(
                 decoration: BoxDecoration(
                    color: Colors.white,
                     borderRadius: BorderRadius.circular(25)),
                 child: ClipRRect(
                   // Los bordes del contenido del card se cortan usando BorderRadius
-
                   // widget hijo que será recortado segun la propiedad anterior
                   child: Column(
                     children: <Widget>[
@@ -212,7 +204,8 @@ class _FormPuntosState extends State<FormPuntos> {
                         padding: EdgeInsets.all(1),
                         child: Text(puntos.nombre,
                             style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 20)),
+                                fontWeight: FontWeight.bold, fontSize: 20),
+                        textAlign: TextAlign.center,),
                       ),
                       Container(
                           padding: EdgeInsets.all(10),
