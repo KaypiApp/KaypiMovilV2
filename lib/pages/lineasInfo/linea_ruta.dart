@@ -8,6 +8,9 @@ import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+const Color colorPage7 = Color.fromARGB(255, 239, 234, 225);
+const Color colorCabecera7 = Color(0xFF387990);
+
 class LineaRuta extends StatefulWidget {
   PuntoEstrategico? newdata;
   LineaRuta({this.newdata});
@@ -75,7 +78,7 @@ class _LineaRutaState extends State<LineaRuta> {
     return Scaffold(
         extendBodyBehindAppBar: false,
         appBar: AppBar(
-          backgroundColor: Colors.blue.shade900,
+          backgroundColor: colorCabecera7,
           title: Text('Rutas',
             style: TextStyle(color: Colors.white),),
           elevation: 0,
