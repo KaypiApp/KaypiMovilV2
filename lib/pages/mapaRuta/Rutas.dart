@@ -18,6 +18,9 @@ import 'dart:math' show cos, sqrt, asin;
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
+const Color colorPage11 = Color.fromARGB(255, 239, 234, 225);
+const Color colorCabecera11 = Color(0xFF387990);
+
 class Rutas extends StatefulWidget {
   const Rutas({Key? key}) : super(key: key);
 
@@ -101,7 +104,7 @@ class _RutasState extends State<Rutas> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.blue.shade900,
+        backgroundColor: colorCabecera11,
         title: Text('Rutas', style: TextStyle(color: Colors.white)),
         elevation: 0,
         leading: InkWell(
