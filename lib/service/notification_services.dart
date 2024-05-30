@@ -1,12 +1,10 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_kaypi/main.dart';
 
-final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-    FlutterLocalNotificationsPlugin();
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
 Future<void> initNotifications() async {
-  const AndroidInitializationSettings initializationSettingsAndroid =
-      AndroidInitializationSettings('app_icon');
+  const AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings('app_icon');
 
   const InitializationSettings initializationSettings = InitializationSettings(
     android: initializationSettingsAndroid,
@@ -16,8 +14,7 @@ Future<void> initNotifications() async {
 }
 
 Future<void> mostrarNotificacion(String id, String nombreLinea, String descripcion) async {
-  final AndroidNotificationDetails androidNotificationDetails =
-      AndroidNotificationDetails(
+  final AndroidNotificationDetails androidNotificationDetails = AndroidNotificationDetails(
     'your_channel_id',
     'your_channel_name',
     importance: Importance.max,
@@ -30,4 +27,3 @@ Future<void> mostrarNotificacion(String id, String nombreLinea, String descripci
 
   await flutterLocalNotificationsPlugin.show(id.hashCode, nombreLinea, descripcion, notificationDetails);
 }
-
