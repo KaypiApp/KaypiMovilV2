@@ -66,7 +66,7 @@ class _MenuZoomState extends State<MenuZoom> {
       case MenuItems.notifications:
         return Notifications();
       case MenuItems.configuracion:
-       default:
+      default:
         return Configuracion();
     }
   }
