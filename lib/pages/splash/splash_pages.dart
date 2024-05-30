@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_kaypi/pages/splash/splash_Controller.dart';
 import 'package:permission_handler/permission_handler.dart';
+const Color colorPage = Color(0xFF387990);
 
 class SplashPage extends StatefulWidget {
   const SplashPage({Key? key}) : super(key: key);
@@ -40,7 +41,7 @@ class _SplashPageState extends State<SplashPage> {
             colors: [
               Colors.white,
               Colors.grey,
-              Colors.blue.shade900,
+              colorPage,
             ],
             begin: Alignment.topRight,
             end: Alignment.bottomLeft,

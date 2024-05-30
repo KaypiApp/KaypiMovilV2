@@ -13,6 +13,8 @@ import 'package:flutter_kaypi/screens/menu_screen.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:flutter_kaypi/pages/notifications/notifications.dart';
 
+const Color color1 = Color(0xFF9cd2d3);
+
 class MenuZoom extends StatefulWidget {
   MenuZoom({Key? key}) : super(key: key);
 
@@ -41,7 +43,7 @@ class _MenuZoomState extends State<MenuZoom> {
         borderRadius: 40,
         showShadow: true,
         angle: -14.00,
-        backgroundColor: Colors.blue.shade600,
+        backgroundColor: color1,
         slideWidth: MediaQuery.of(context).size.width * 0.7,
         openCurve: Curves.fastOutSlowIn,
         closeCurve: Curves.bounceIn,

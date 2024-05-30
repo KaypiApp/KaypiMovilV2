@@ -7,6 +7,8 @@ import 'package:flutter_kaypi/pages/model/puntoEstrategico.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
+const Color color1 = Color(0xFF387990);
+
 class RutasProvider with ChangeNotifier {
   int range = 500;
   //metodo que obtiene las lineas, mas cercanas, por los puntos estrategicos con un rango definido por marcador
@@ -53,7 +55,7 @@ class RutasProvider with ChangeNotifier {
           msg: "No se encontraron líneas que pasen por los puntos seleccionados." ,
           toastLength: Toast.LENGTH_SHORT, // Duración del mensaje (Toast.LENGTH_SHORT o Toast.LENGTH_LONG)
           gravity: ToastGravity.TOP, // Posición del mensaje (TOP, CENTER, BOTTOM)
-          backgroundColor: Colors.blue.shade900.withOpacity(0.8), // Color de fondo del mensaje
+          backgroundColor: color1.withOpacity(0.8), // Color de fondo del mensaje
           textColor: Colors.white, // Color del texto del mensaje
         );
     }
@@ -103,7 +105,7 @@ class RutasProvider with ChangeNotifier {
         msg: "No se encontraron líneas que pasen por los puntos seleccionados.",
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.TOP,
-        backgroundColor: Colors.blue.shade900.withOpacity(0.8),
+        backgroundColor: color1.withOpacity(0.8),
         textColor: Colors.white,
       );
     }
