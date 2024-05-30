@@ -83,7 +83,8 @@ class _FormPuntosState extends State<FormPuntos> {
       actions: <Widget>[
           isSearching
               ? IconButton(
-                  icon: Icon(Icons.cancel),
+                  icon: Icon(Icons.cancel,
+                    color: Colors.white,),
                   onPressed: () {
                     setState(() {
                       this.isSearching = false;
@@ -92,7 +93,7 @@ class _FormPuntosState extends State<FormPuntos> {
                   },
                 )
               : IconButton(
-                  icon: Icon(Icons.search),
+                  icon: Icon(Icons.search, color: Colors.white,),
                   onPressed: () {
                     setState(() {
                       this.isSearching = true;
@@ -286,7 +287,10 @@ Widget _buildPuntoEspecifico(PuntoEstrategico puntosEstrategicos, context) {
   final puntos = puntosEstrategicos;
   return Scaffold(
       appBar: AppBar(
-        title: Text(puntos.nombre),
+        title: Text(puntos.nombre , style: TextStyle(color: Colors.white)),
+        iconTheme: IconThemeData(
+          color: Colors.white,
+        ),
         backgroundColor: colorCabecera13,
       ),
       body: Card(
@@ -350,7 +354,7 @@ Widget _buildPuntoEspecifico(PuntoEstrategico puntosEstrategicos, context) {
                                           )),
                                 )
                               },
-                          child: Text('Puntos')),
+                          child: Text('Puntos' ,style: TextStyle(color: Colors.white))),
                       SizedBox(
                         width: 15,
                       ),
@@ -367,7 +371,7 @@ Widget _buildPuntoEspecifico(PuntoEstrategico puntosEstrategicos, context) {
                                         builder: (context) =>
                                             LineasPuntos(puntos: puntos))),
                               },
-                          child: Text('Lineas'))
+                          child: Text('Lineas' ,style: TextStyle(color: Colors.white)))
                     ],
                   )
                 ],
@@ -401,6 +405,9 @@ class PuntosMarcadorGoogle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double longitude = double.parse(puntos.punto.lng.toString());
+    double latitude = double.parse(puntos.punto.lat.toString());
+
     return Scaffold(
       appBar: AppBar(
           title: Text("Vista de Marcador", style: TextStyle(color: Colors.white)),
@@ -412,16 +419,19 @@ class PuntosMarcadorGoogle extends StatelessWidget {
         children: <Widget>[
           GoogleMap(
             markers: _createMarker(),
-              gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>[
-            new Factory<OneSequenceGestureRecognizer>(() => new EagerGestureRecognizer(),)
+            gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>[
+              Factory<OneSequenceGestureRecognizer>(() => EagerGestureRecognizer(),)
             ].toSet(),
-            initialCameraPosition: _initialLocation,
-            
+            initialCameraPosition: CameraPosition(target: LatLng(latitude, longitude), zoom: 15), // Set the initial position to the marker
             minMaxZoomPreference: MinMaxZoomPreference(13, 17),
             myLocationEnabled: true,
             myLocationButtonEnabled: true,
             mapType: MapType.normal,
             onMapCreated: (GoogleMapController controller) {
+              mapController = controller;
+              mapController.animateCamera(
+                CameraUpdate.newLatLngZoom(LatLng(latitude, longitude), 15), // Center the map on the marker with zoom level
+              );
               controller.showMarkerInfoWindow(MarkerId('marker_2'));
             },
           ),
