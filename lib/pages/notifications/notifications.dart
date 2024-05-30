@@ -3,6 +3,9 @@ import 'package:flutter_kaypi/dbHelper/mongodb.dart';
 import 'package:flutter_kaypi/service/notification_services.dart'; // Importa el archivo de servicios de notificación
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 
+const Color colorPage12 = Color.fromARGB(255, 239, 234, 225);
+const Color colorCabecera12 = Color(0xFF387990);
+
 class Notifications extends StatefulWidget {
   const Notifications({Key? key}) : super(key: key);
 
@@ -55,17 +58,24 @@ class _NotificationsState extends State<Notifications> {
       home: Scaffold(
         extendBodyBehindAppBar: false,
         appBar: AppBar(
-          title: Text("Notificaciones",
-              style: TextStyle(
-                color: Colors.white,
-              )),
-          backgroundColor: Colors.blue.shade900,
+          title: Text(
+            "Notificaciones",
+            style: TextStyle(
+              color: Colors.white,
+            ),
+          ),
+          backgroundColor: colorCabecera12, // Color de cabecera
           elevation: 0,
           leading: InkWell(
             onTap: () => ZoomDrawer.of(context)!.toggle(),
-            child: Icon(Icons.menu, color: Colors.white, size: 28,),
+            child: Icon(
+              Icons.menu,
+              color: Colors.white,
+              size: 28,
+            ),
           ),
         ),
+        backgroundColor: colorPage12, // Color de fondo
         body: notifications.isEmpty
             ? Center(
                 child: CircularProgressIndicator(),
