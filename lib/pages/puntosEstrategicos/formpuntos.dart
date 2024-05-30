@@ -8,6 +8,12 @@ import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+
+const Color colorPage13 = Color.fromARGB(255, 239, 234, 225);
+const Color colorCabecera13 = Color(0xFF387990);
+
+const Color colorBoton = Color(0xFF387990);
+
 List<String> listalineas = <String>[];
 class FormPuntos extends StatefulWidget {
   const FormPuntos({Key? key}) : super(key: key);
@@ -43,9 +49,9 @@ class _FormPuntosState extends State<FormPuntos> {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
-      backgroundColor: Colors.white,
+      backgroundColor: colorPage13,
       appBar: AppBar(
-        backgroundColor: Colors.blue.shade900,
+        backgroundColor: colorCabecera13,
         title:  !isSearching
             ? Text(
             'Puntos Estrategicos',
@@ -62,7 +68,7 @@ class _FormPuntosState extends State<FormPuntos> {
                       Icons.search,
                       color: Colors.white,
                     ),
-                    hoverColor: Colors.blueAccent.shade400,
+                    hoverColor: colorCabecera13,
                     hintText: "Busca tu lugar de preferencia",
                     hintStyle: TextStyle(color: Colors.white60, decoration:TextDecoration.none),
                      enabledBorder: UnderlineInputBorder(      
@@ -227,7 +233,7 @@ class _FormPuntosState extends State<FormPuntos> {
                           TextButton(
                               style: TextButton.styleFrom(
                                 //primary: Colors.white,
-                                backgroundColor: Colors.blue.shade900,
+                                backgroundColor: colorBoton,
                                 //onSurface: Colors.blue.shade100,
                               ),
                               onPressed: () => {
@@ -248,7 +254,7 @@ class _FormPuntosState extends State<FormPuntos> {
                           TextButton(
                               style: TextButton.styleFrom(
                                 //color: Colors.white,
-                                backgroundColor: Colors.blue.shade900,
+                                backgroundColor: colorBoton,
                                 //onSurface: Colors.blue.shade100,
                               ),
                               onPressed: () => {
@@ -281,7 +287,7 @@ Widget _buildPuntoEspecifico(PuntoEstrategico puntosEstrategicos, context) {
   return Scaffold(
       appBar: AppBar(
         title: Text(puntos.nombre),
-        backgroundColor: Colors.blue.shade900,
+        backgroundColor: colorCabecera13,
       ),
       body: Card(
         color: Colors.white,
@@ -331,7 +337,7 @@ Widget _buildPuntoEspecifico(PuntoEstrategico puntosEstrategicos, context) {
                       TextButton(
                           style: TextButton.styleFrom(
                             //primary: Colors.white,
-                            backgroundColor: Colors.blue.shade900,
+                            backgroundColor: colorBoton,
                             //onSurface: Colors.blue.shade100,
                           ),
                           onPressed: () => {
@@ -351,7 +357,7 @@ Widget _buildPuntoEspecifico(PuntoEstrategico puntosEstrategicos, context) {
                       TextButton(
                           style: TextButton.styleFrom(
                             //primary: Colors.white,
-                            backgroundColor: Colors.blue.shade900,
+                            backgroundColor: colorCabecera13,
                             //onSurface: Colors.blue.shade100,
                           ),
                           onPressed: () => {
@@ -401,7 +407,7 @@ class PuntosMarcadorGoogle extends StatelessWidget {
           iconTheme: IconThemeData(
             color: Colors.white,
           ),
-          backgroundColor: Colors.blue.shade900),
+          backgroundColor: colorCabecera13),
       body: Stack(
         children: <Widget>[
           GoogleMap(
