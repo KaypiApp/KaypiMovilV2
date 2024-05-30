@@ -6,6 +6,9 @@ import 'package:flutter_kaypi/pages/lugaresTuristicos/CardLugar.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 //import 'package:expandable/expandable.dart';
 
+const Color colorPage8 = Color.fromARGB(255, 239, 234, 225);
+const Color colorCabecera8 = Color(0xFF387990);
+
 //Los widgets stateful heredan de la clase StatefulWidget.
 //La clase ListaLugaresTuristicos administra su propio estado,
 //sobreescribiendo el método createState() para crear el objeto State.
@@ -230,23 +233,22 @@ class _ListaLugaresTuristicosState extends State<ListaLugaresTuristicos> {
 //Este widget build lo que hace es construir un espacio,
 //donde se mostrará los cards de las listas de lugares turísticos
   @override
-  Widget build(BuildContext context) {
-    //Ésta línea de código hará que el widget se construya automáticamente, es decir que su proporción
-    //en la intefaz de usuario se controlará(es como un size).
-    final orientacion = MediaQuery.of(context).orientation;
+Widget build(BuildContext context) {
+  final orientacion = MediaQuery.of(context).orientation;
 
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-        home: Scaffold(
-      backgroundColor: Colors.blue.shade900,
+  return MaterialApp(
+    debugShowCheckedModeBanner: false,
+    home: Scaffold(
+      backgroundColor: colorPage8,
       extendBodyBehindAppBar: true,
-      //Este Código AppBar, es el menú de navegabilidad
       appBar: AppBar(
-        title: Text("Lugares Turisticos",
-            style: TextStyle(
-              color: Colors.white,
-            )),
-        backgroundColor: Colors.transparent,
+        title: Text(
+          "Lugares Turisticos",
+          style: TextStyle(
+            color: Colors.white,
+          ),
+        ),
+        backgroundColor: colorCabecera8,
         elevation: 0,
         leading: InkWell(
           onTap: () => ZoomDrawer.of(context)!.toggle(),
@@ -257,43 +259,44 @@ class _ListaLugaresTuristicosState extends State<ListaLugaresTuristicos> {
           ),
         ),
       ),
-      // Todo lo que esta dentro del body es el codigo que maneja las columnas, en este caso dos,
-      //para el despliegue de los cards que contienen una breve descripción de un lugar turítico.
       body: Padding(
-          padding: const EdgeInsets.all(0),
-          child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Expanded(
-                  child: AnimatedSwitcher(
-                    duration: const Duration(seconds: 2),
-                    transitionBuilder: (widget, animation) {
-                      return ScaleTransition(
-                        scale: animation,
-                        child: widget,
-                      );
-                    },
-                    child: orientacion == Orientation.landscape
-                        ? GridView.builder(
-                            gridDelegate:
-                                SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 2),
-                            physics: const BouncingScrollPhysics(),
-                            itemCount: elementos.length,
-                            itemBuilder: (context, index) =>
-                                ListaOpciones(context, index))
-                        : GridView.builder(
-                            gridDelegate:
-                                SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 2),
-                            physics: const BouncingScrollPhysics(),
-                            itemCount: elementos.length,
-                            itemBuilder: (context, index) =>
-                                ListaOpciones(context, index),
-                          ),
-                  ),
-                ),
-              ])),
-    ));
-  }
+        padding: const EdgeInsets.all(0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Expanded(
+              child: AnimatedSwitcher(
+                duration: const Duration(seconds: 2),
+                transitionBuilder: (widget, animation) {
+                  return ScaleTransition(
+                    scale: animation,
+                    child: widget,
+                  );
+                },
+                child: orientacion == Orientation.landscape
+                    ? GridView.builder(
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                        ),
+                        physics: const BouncingScrollPhysics(),
+                        itemCount: elementos.length,
+                        itemBuilder: (context, index) => ListaOpciones(context, index),
+                      )
+                    : GridView.builder(
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                        ),
+                        physics: const BouncingScrollPhysics(),
+                        itemCount: elementos.length,
+                        itemBuilder: (context, index) => ListaOpciones(context, index),
+                      ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
+}
+
 }
