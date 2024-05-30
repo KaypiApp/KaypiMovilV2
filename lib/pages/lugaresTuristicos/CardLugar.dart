@@ -70,6 +70,7 @@ class CardLugarState extends State<CardLugar> {
                                 SizedBox(height: 15),
                                 Text(
                                   _lugar.titulo.toUpperCase(),
+                                  textAlign: TextAlign.center,
                                   style: TextStyle(
                                     color: Colors.black,
                                     fontSize: 22.0,

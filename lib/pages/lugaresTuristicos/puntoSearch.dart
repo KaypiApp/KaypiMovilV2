@@ -60,7 +60,10 @@ class _PuntoSearchState extends State<PuntoSearch> {
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: colorCabecera10,
-        title: Text("Puntos Estrategicos"),
+        title: Text("Puntos Estrategicos",
+            style: TextStyle(
+              color: Colors.white,
+            )),
         elevation: 0,
         leading: InkWell(
           onTap: () => Navigator.of(context).pop(),
@@ -107,8 +110,13 @@ class _PuntoSearchState extends State<PuntoSearch> {
     final puntos = puntosEstrategicos;
     return Scaffold(
       appBar: AppBar(
-        title: Text(puntos.nombre),
+        title: Text(puntos.nombre,
+          style: TextStyle(color: Colors.white,),
+        ),
         backgroundColor: colorCabecera10,
+        iconTheme: IconThemeData(
+          color: Colors.white,
+        ),
       ),
       body: Card(
         color: Colors.white,
@@ -169,14 +177,11 @@ class _PuntoSearchState extends State<PuntoSearch> {
                           child: Text(
                             "Puntos",
                             style: TextStyle(
-                             
+
                              color: Colors.white,
                             ),
-                          
                           ),
-                        
                         ),
-                        
                     SizedBox(
                       width: 15,
                     ),
@@ -195,10 +200,10 @@ class _PuntoSearchState extends State<PuntoSearch> {
                         child: Text(
                             "Lineas",
                             style: TextStyle(
-                             
+
                              color: Colors.white,
                             ),
-                          
+
                           )
                         ),
                   ],
@@ -217,7 +222,7 @@ class PuntosMarcadorGoogle extends StatelessWidget {
   late GoogleMapController mapController;
   late Position _currentPosition;
   CameraPosition _initialLocation =
-      CameraPosition(target: LatLng(-17.399468, -66.157664));
+  CameraPosition(target: LatLng(-17.399468, -66.157664));
   late Marker m;
   BitmapDescriptor customIcon = BitmapDescriptor.defaultMarker;
   PuntosMarcadorGoogle({Key? key, required this.puntos}) : super(key: key);
@@ -229,64 +234,41 @@ class PuntosMarcadorGoogle extends StatelessWidget {
           markerId: MarkerId("marker_2"),
           position: LatLng(latitude, longitude),
           infoWindow:
-              InfoWindow(title: puntos.nombre, snippet: puntos.descripcion)),
+          InfoWindow(title: puntos.nombre, snippet: puntos.descripcion)),
     };
   }
 
   @override
   Widget build(BuildContext context) {
+    double longitude = double.parse(puntos.punto.lng.toString());
+    double latitude = double.parse(puntos.punto.lat.toString());
+
     return Scaffold(
-      appBar: AppBar(title: Text("VISTA DE MARCADOR"), backgroundColor: colorCabecera10),
+      appBar: AppBar(
+          title: Text("Vista de Marcador", style: TextStyle(color: Colors.white)),
+          iconTheme: IconThemeData(
+            color: Colors.white,
+          ),
+          backgroundColor: colorCabecera13),
       body: Stack(
         children: <Widget>[
           GoogleMap(
-            gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>[
-              new Factory<OneSequenceGestureRecognizer>(() => new EagerGestureRecognizer(),)
-            ].toSet(),
             markers: _createMarker(),
-            initialCameraPosition: _initialLocation,
+            gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>[
+              Factory<OneSequenceGestureRecognizer>(() => EagerGestureRecognizer(),)
+            ].toSet(),
+            initialCameraPosition: CameraPosition(target: LatLng(latitude, longitude), zoom: 15), // Set the initial position to the marker
             minMaxZoomPreference: MinMaxZoomPreference(13, 17),
             myLocationEnabled: true,
-            myLocationButtonEnabled: false,
+            myLocationButtonEnabled: true,
             mapType: MapType.normal,
             onMapCreated: (GoogleMapController controller) {
+              mapController = controller;
+              mapController.animateCamera(
+                CameraUpdate.newLatLngZoom(LatLng(latitude, longitude), 15), // Center the map on the marker with zoom level
+              );
               controller.showMarkerInfoWindow(MarkerId('marker_2'));
             },
-          ),
-          SafeArea(
-            child: Align(
-              alignment: Alignment.topRight,
-              child: Padding(
-                padding: const EdgeInsets.only(right: 10.0, bottom: 10.0),
-               
-                child: ClipOval(
-                  child: Material(
-                    color: Colors.orange.shade100,
-                    child: InkWell(
-                      splashColor: Colors.orange,
-                      child: SizedBox(
-                        width: 56,
-                        height: 56,
-                        child: Icon(Icons.my_location),
-                      ),
-                      onTap: () {
-                        mapController.animateCamera(
-                          CameraUpdate.newCameraPosition(
-                            CameraPosition(
-                              target: LatLng(
-                                _currentPosition.latitude,
-                                _currentPosition.longitude,
-                              ),
-                              zoom: 18.0,
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ),
-              ),
-            ),
           ),
         ],
       ),
