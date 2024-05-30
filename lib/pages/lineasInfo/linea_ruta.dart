@@ -111,7 +111,7 @@ class _LineaRutaState extends State<LineaRuta> {
                     alignment: Alignment.bottomCenter,
                     margin: EdgeInsets.only(bottom: 50.0),
                     child: Card(
-                      color: Color.fromRGBO(61, 90, 254, 1.0),
+                      color: colorCabecera7,
                       child: Container(
                         height: 90.0,
                         alignment: Alignment.center,
@@ -121,7 +121,7 @@ class _LineaRutaState extends State<LineaRuta> {
                             ListTile(
                               leading: CircleAvatar(
                                 backgroundImage:
-                                    AssetImage('assets/img/KaypiLogo.png'),
+                                    AssetImage('assets/img/KaypiLogoNegro.png'),
                                 backgroundColor: Colors.white,
                                 radius: 32.0,
                               ),
