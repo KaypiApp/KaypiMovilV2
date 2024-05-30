@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_kaypi/pages/lineasInfo/linea_page.dart';
 import 'package:flutter_kaypi/pages/model/linea.dart';
@@ -17,10 +18,51 @@ class LineasPuntos extends StatefulWidget {
 }
 
 class _LineasPuntosState extends State<LineasPuntos> {
+  late Future<List<Linea>> futureLineas;
+  List<Linea> lines = [];
+  List<Linea> filteredLines = [];
+
+  @override
+  void initState() {
+    super.initState();
+    futureLineas = lineasApi.cargarData();
+    futureLineas.then((data) {
+      setState(() {
+        lines = filteredLines = data
+            .where((f) => widget.puntos.lineas.contains(f.nombre))
+            .toList();
+        _sortLines();
+      });
+    });
+  }
+
+  void _sortLines() {
+    filteredLines.sort((a, b) {
+      final regex = RegExp(r'^Línea (\d+|\D)$');
+      final matchA = regex.firstMatch(a.nombre);
+      final matchB = regex.firstMatch(b.nombre);
+
+      if (matchA != null && matchB != null) {
+        final partA = matchA.group(1)!;
+        final partB = matchB.group(1)!;
+
+        final isNumA = int.tryParse(partA);
+        final isNumB = int.tryParse(partB);
+
+        if (isNumA != null && isNumB != null) {
+          return isNumA.compareTo(isNumB);
+        } else if (isNumA == null && isNumB == null) {
+          return partA.compareTo(partB);
+        } else {
+          return isNumA == null ? -1 : 1;
+        }
+      }
+      return a.nombre.compareTo(b.nombre);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    print("lista puntosEstrategicos");
-    print(listalineas);
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -34,7 +76,7 @@ class _LineasPuntosState extends State<LineasPuntos> {
             size: 28,
           ),
         ),
-        title: Text('Lineas', style: TextStyle(color: Colors.white)),
+        title: Text(widget.puntos.nombre, style: TextStyle(color: Colors.white)),
       ),
       backgroundColor: colorPage13, // Color de fondo
       body: _lista(context),
@@ -42,31 +84,25 @@ class _LineasPuntosState extends State<LineasPuntos> {
   }
 
   Widget _lista(context) => FutureBuilder<List<Linea>>(
-        future: lineasApi.cargarData(),
-        initialData: [],
-        builder: (context, snapshot) {
-          final lineas = snapshot.data!
-              .where((f) => widget.puntos.lineas.contains(f.nombre))
-              .toList();
-
-          switch (snapshot.connectionState) {
-            case ConnectionState.waiting:
-              return Center(child: CircularProgressIndicator());
-            default:
-              if (snapshot.hasError) {
-                return Center(child: Text('Error'));
-              }
-
-              if (!snapshot.hasData ||
-                  lineas.isEmpty ||
-                  snapshot.data!.isEmpty) {
-                return Center(child: Text('No hay data'));
-              }
-
-              return _buildLineas(lineas, context);
+    future: futureLineas,
+    initialData: [],
+    builder: (context, snapshot) {
+      switch (snapshot.connectionState) {
+        case ConnectionState.waiting:
+          return Center(child: CircularProgressIndicator());
+        default:
+          if (snapshot.hasError) {
+            return Center(child: Text('Error'));
           }
-        },
-      );
+
+          if (!snapshot.hasData || filteredLines.isEmpty) {
+            return Center(child: Text('No hay data'));
+          }
+
+          return _buildLineas(filteredLines, context);
+      }
+    },
+  );
 
   Widget _buildLineas(List<Linea> lineas, context) {
     return ListView.builder(
@@ -82,7 +118,6 @@ class _LineasPuntosState extends State<LineasPuntos> {
             ),
           )),
           leading: CircleAvatar(
-            //backgroundImage: AssetImage(linea.imagen),
             backgroundImage: AssetImage('assets/img/KaypiLogoNegro.png'),
             backgroundColor: Colors.transparent,
           ),
