@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_kaypi/pages/ayuda/CardInfo.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 
-const Color colorPage2 = Color(0xFFf2e6cf);
+const Color colorPage2 =Color.fromARGB(255, 239, 234, 225);
 const Color colorCabecera2 = Color(0xFF387990);
 
 class AyudaKaypi extends StatefulWidget {

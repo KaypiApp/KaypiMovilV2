@@ -3,7 +3,8 @@ import 'package:flutter_kaypi/pages/info/info.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:flutter_kaypi/pages/ayuda/ayudaKaypi.dart';
 
-const Color colorPage = Color(0xFFf2e6cf);
+const Color colorPage = Color.fromARGB(255, 239, 234, 225);
+//const Color colorPage = Color(0xFFF1E6D2);
 const Color colorCabecera1 = Color(0xFF387990);
 
 class Configuracion extends StatefulWidget {
