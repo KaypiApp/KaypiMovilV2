@@ -4,9 +4,14 @@ import 'package:flutter_kaypi/pages/mapaRuta/Rutas.dart';
 import 'package:flutter_kaypi/pages/model/linea.dart';
 import 'package:flutter_kaypi/pages/model/puntoEstrategico.dart';
 
+const Color colorPage6 = Color.fromARGB(255, 239, 234, 225);
+const Color colorCabecera6 = Color(0xFF387990);
+
+
 class LineaPage extends StatelessWidget {
   PuntoEstrategico? p;
   final Linea linea;
+
   LineaPage({
     Key? key,
     required this.linea,
@@ -17,9 +22,11 @@ class LineaPage extends StatelessWidget {
   Widget build(BuildContext context) => Scaffold(
         extendBodyBehindAppBar: true,
         appBar: AppBar(
-          backgroundColor: Colors.blue.shade900,
-          title: Text(linea.nombre,
-            style: TextStyle(color: Colors.white),),
+          backgroundColor: colorCabecera6,
+          title: Text(
+            linea.nombre,
+            style: TextStyle(color: Colors.white),
+          ),
           elevation: 0,
           leading: InkWell(
             onTap: () => Navigator.of(context).pop(),
@@ -30,19 +37,23 @@ class LineaPage extends StatelessWidget {
             ),
           ),
         ),
+        backgroundColor: colorPage6,
         body: _detalleLineaView(context),
       );
 
-  Widget _detalleLineaView(context) => SingleChildScrollView(
-        padding: EdgeInsets.only(top: 100),
+  Widget _detalleLineaView(BuildContext context) => SingleChildScrollView(
+        padding: EdgeInsets.symmetric(vertical: 100, horizontal: 16), // Ajuste del padding
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            CircleAvatar(
-              //backgroundImage: AssetImage(linea.imagen),
-              backgroundImage: AssetImage('assets/img/KaypiLogo.png'),
-              backgroundColor: Colors.transparent,
-              radius: 80,
+            Container(
+              alignment: Alignment.center,
+              padding: EdgeInsets.only(top: 30), // Nuevo padding superior
+              child: CircleAvatar(
+                backgroundImage: AssetImage('assets/img/KaypiLogoNegro.png'),
+                backgroundColor: Colors.transparent,
+                radius: 80,
+              ),
             ),
             const SizedBox(height: 25),
             Text(
@@ -52,35 +63,22 @@ class LineaPage extends StatelessWidget {
                 fontWeight: FontWeight.bold,
                 fontSize: 28,
               ),
+              textAlign: TextAlign.center,
             ),
             const SizedBox(height: 25),
-            Text(
-              'CATEGORIA',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 10),
-            Text(linea.categoria),
+            _buildCard('CATEGORIA', linea.categoria),
+            _buildCard('PASAJES', linea.pasajes.join('\n')),
+            _buildCard('HORARIOS', linea.horarios.join('\n')),
+            _buildCard('CALLES', linea.calles.join('\n')),
+            _buildCard('TELEFONOS', linea.telefonos.join('\n')),
+            _buildCard('ZONA', linea.zonasCBBA.join('\n')),
             const SizedBox(height: 25),
             ElevatedButton(
               child: Text(
                 'RUTAS',
                 style: TextStyle(color: Colors.white, fontSize: 18),
               ),
-              //Aca incorporar para vizualizar rutas de la lina.
               onPressed: () {
-                /*print(0);
-                print("------");
-                  List<double> listLat = <double>[];
-                  List<double> listLng = <double>[];
-                  int cont=0;
-                  for (var e in linea.ruta[0].puntos) { 
-                  print('${e.lat}'+'${e.lng}');
-                  listLat.add(e.lat);
-                  listLng.add(e.lng);
-                  cont++;
-                  }
-                print("------");
-                print(cont);*/
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -92,112 +90,46 @@ class LineaPage extends StatelessWidget {
                 );
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue.shade900, // Cambia el fondo del botón a azul
+                backgroundColor: colorCabecera6,
               ),
             ),
-            const SizedBox(height: 25),
-            Text(
-              'PASAJES',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            ListView.builder(
-                padding: EdgeInsets.only(top: 5),
-                physics: BouncingScrollPhysics(),
-                itemCount: linea.pasajes.length,
-                shrinkWrap: true,
-                itemBuilder: (BuildContext context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Center(
-                      child: Text(
-                        linea.pasajes[index],
-                      ),
-                    ),
-                  );
-                }),
-            const SizedBox(height: 25),
-            Text(
-              'HORARIOS',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            ListView.builder(
-                padding: EdgeInsets.only(top: 5),
-                physics: BouncingScrollPhysics(),
-                itemCount: linea.horarios.length,
-                shrinkWrap: true,
-                itemBuilder: (BuildContext context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Center(
-                      child: Text(
-                        linea.horarios[index],
-                      ),
-                    ),
-                  );
-                }),
-            const SizedBox(height: 25),
-            Text(
-              'CALLES',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            ListView.builder(
-              padding: EdgeInsets.only(top: 5),
-              physics: BouncingScrollPhysics(),
-              itemCount: linea.calles.length,
-              shrinkWrap: true,
-              itemBuilder: (BuildContext context, index) {
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Center(
-                    child: Text(
-                      linea.calles[index],
-                    ),
-                  ),
-                );
-              },
-            ),
-            const SizedBox(height: 25),
-            Text(
-              'TELEFONOS',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            ListView.builder(
-                padding: EdgeInsets.only(top: 5),
-                physics: BouncingScrollPhysics(),
-                itemCount: linea.telefonos.length,
-                shrinkWrap: true,
-                itemBuilder: (BuildContext context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Center(
-                      child: Text(
-                        linea.telefonos[index],
-                      ),
-                    ),
-                  );
-                }),
-            const SizedBox(height: 25),
-            Text(
-              'ZONA',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            ListView.builder(
-                padding: EdgeInsets.only(top: 5),
-                physics: BouncingScrollPhysics(),
-                itemCount: linea.zonasCBBA.length,
-                shrinkWrap: true,
-                itemBuilder: (BuildContext context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Center(
-                      child: Text(
-                        linea.zonasCBBA[index],
-                      ),
-                    ),
-                  );
-                }),
-            const SizedBox(height: 25),
           ],
         ),
       );
+
+  Widget _buildCard(String title, String content) {
+    return Card(
+      margin: EdgeInsets.symmetric(vertical: 10),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      elevation: 5,
+      child: Padding(
+        padding: EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 10),
+            Text(
+              content,
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.black,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
