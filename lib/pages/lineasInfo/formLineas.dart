@@ -1,10 +1,12 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_kaypi/provider/lineas_api.dart';
 import 'package:flutter_kaypi/pages/lineasInfo/linea_page.dart';
 import 'package:flutter_kaypi/pages/model/linea.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
+
+const Color colorPage5 = Color.fromARGB(255, 239, 234, 225);
+const Color colorCabecera5 = Color(0xFF387990);
 
 class FormLineas extends StatefulWidget {
   const FormLineas({Key? key}) : super(key: key);
@@ -18,6 +20,8 @@ class _FormLineasState extends State<FormLineas> {
   bool _isMinBusVisible = true;
   bool _isTaxTruVisible = true;
   bool _isMicroVisible = true;
+
+  @override
   void initState() {
     futureLineas = lineasApi.cargarData();
     lineasApi.cargarData().then((data) {
@@ -31,8 +35,8 @@ class _FormLineasState extends State<FormLineas> {
   void _filterLines(value) {
     setState(() {
       filteredLines = lines
-          .where(
-              (line) => line.nombre.toLowerCase().contains(value.toLowerCase()))
+          .where((line) =>
+              line.nombre.toLowerCase().contains(value.toLowerCase()))
           .toList();
     });
   }
@@ -40,99 +44,101 @@ class _FormLineasState extends State<FormLineas> {
   List lines = [];
   List filteredLines = [];
   bool isSearching = false;
+
   @override
   Widget build(BuildContext context) => Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        title: !isSearching
-            ? Text('Lineas de Transporte',
-                style: TextStyle(color: Colors.blue.shade900))
-            : TextField(
-                onChanged: (value) {
-                  _filterLines(value);
-                },
-                style: TextStyle(
-                  color: Colors.blue.shade900,
-                ),
-                decoration: InputDecoration(
-                  icon: Icon(
-                    Icons.search,
-                    color: Colors.blue.shade900,
+        backgroundColor: colorPage5,
+        extendBodyBehindAppBar: true,
+        appBar: AppBar(
+          backgroundColor: colorCabecera5,
+          elevation: 0,
+          title: !isSearching
+              ? Text(
+                  'Líneas de Transporte',
+                  style: TextStyle(color: Colors.white),
+                )
+              : TextField(
+                  onChanged: (value) {
+                    _filterLines(value);
+                  },
+                  style: TextStyle(color: Colors.white),
+                  decoration: InputDecoration(
+                    icon: Icon(Icons.search, color: Colors.white),
+                    hintText: "Ejemplo: 120",
+                    hintStyle: TextStyle(
+                      color: Colors.white,
+                      decoration: TextDecoration.none,
+                    ),
+                    errorBorder: InputBorder.none,
+                    disabledBorder: InputBorder.none,
                   ),
-                  hintText: "Ejemplo: 120",
-                  hintStyle: TextStyle(
-                      color: Colors.blue.shade900,
-                      decoration: TextDecoration.none),
-                  errorBorder: InputBorder.none,
-                  disabledBorder: InputBorder.none,
                 ),
-              ),
-        actions: <Widget>[
-          isSearching
-              ? IconButton(
-                  icon: Icon(Icons.cancel),
-                  color: Colors.blue.shade900,
-                  onPressed: () {
-                    setState(() {
-                      this.isSearching = false;
-                      filteredLines = lines;
-                    });
-                  },
-                )
-              : IconButton(
-                  icon: Icon(Icons.search),
-                  color: Colors.blue.shade900,
-                  onPressed: () {
-                    setState(() {
-                      this.isSearching = true;
-                    });
-                  },
-                )
-        ],
-        backgroundColor: Colors.white,
-        elevation: 0,
-        leading: InkWell(
-          onTap: () => ZoomDrawer.of(context)!.toggle(),
-          child: Icon(
-            Icons.menu,
-            color: Colors.blue.shade900,
-            size: 28,
+          actions: <Widget>[
+            isSearching
+                ? IconButton(
+                    icon: Icon(Icons.cancel),
+                    color: Colors.white,
+                    onPressed: () {
+                      setState(() {
+                        this.isSearching = false;
+                        filteredLines = lines;
+                      });
+                    },
+                  )
+                : IconButton(
+                    icon: Icon(Icons.search),
+                    color: Colors.white,
+                    onPressed: () {
+                      setState(() {
+                        this.isSearching = true;
+                      });
+                    },
+                  )
+          ],
+          leading: InkWell(
+            onTap: () => ZoomDrawer.of(context)!.toggle(),
+            child: Icon(
+              Icons.menu,
+              color: Colors.white,
+              size: 28,
+            ),
           ),
         ),
-      ),
-      body: !isSearching
-          ? _lista(context)
-          : Container(
-              padding: EdgeInsets.all(10),
-              child: filteredLines.length > 0
-                  ? ListView.builder(
-                      itemCount: filteredLines.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return GestureDetector(
-                          onTap: () => Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  LineaPage(linea: filteredLines[index]),
-                            ),
-                          ),
-                          child: Card(
-                            elevation: 10,
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 10, horizontal: 8),
-                              child: Text(
-                                filteredLines[index].nombre,
-                                style: TextStyle(
-                                    fontSize: 18, color: Colors.blue.shade900),
+        body: !isSearching
+            ? _lista(context)
+            : Container(
+                padding: EdgeInsets.all(10),
+                child: filteredLines.length > 0
+                    ? ListView.builder(
+                        itemCount: filteredLines.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return GestureDetector(
+                            onTap: () => Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    LineaPage(linea: filteredLines[index]),
                               ),
                             ),
-                          ),
-                        );
-                      })
-                  : Center(
-                      child: CircularProgressIndicator(),
-                    ),
-            ));
+                            child: Card(
+                              elevation: 10,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 10, horizontal: 8),
+                                child: Text(
+                                  filteredLines[index].nombre,
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      color: Colors.black),
+                                ),
+                              ),
+                            ),
+                          );
+                        })
+                    : Center(
+                        child: CircularProgressIndicator(),
+                      ),
+              ),
+      );
 
   List<String> items = [];
   List<String> listaCat = [];
@@ -140,7 +146,6 @@ class _FormLineasState extends State<FormLineas> {
   List<Linea> listaFinal = [];
   String dropdownvalue = "Todo";
 
-  //Widget de visualizacion de rutas en lista
   Widget _lista(context) => FutureBuilder<List<Linea>>(
         future: futureLineas,
         initialData: [],
@@ -150,7 +155,7 @@ class _FormLineasState extends State<FormLineas> {
             case ConnectionState.waiting:
               return Center(
                   child: CircularProgressIndicator(
-                color: Colors.blue.shade900,
+                color: Colors.black,
               ));
             default:
               if (snapshot.hasError) {
@@ -168,25 +173,25 @@ class _FormLineasState extends State<FormLineas> {
                   ListTile(
                     tileColor: Colors.white,
                     title: Text(
-                      "Categorias",
+                      "Categorías",
                       style: TextStyle(
                           fontSize: 18.0,
                           fontWeight: FontWeight.bold,
-                          color: Colors.blue.shade900),
+                          color: Colors.black),
                     ),
                     trailing: DropdownButton(
                       value: dropdownvalue,
                       iconSize: 35,
                       underline:
-                          Container(color: Colors.blue.shade900, height: 1.5),
+                          Container(color: Colors.black, height: 1.5),
                       style: const TextStyle(
-                        color: Colors.indigo,
+                        color: Colors.black,
                         fontWeight: FontWeight.bold,
                         fontSize: 18.0,
                       ),
                       icon: Icon(
                         Icons.keyboard_arrow_down,
-                        color: Colors.blue.shade900,
+                        color: Colors.black,
                       ),
                       items: items.map((String items) {
                         return DropdownMenuItem(
@@ -203,7 +208,7 @@ class _FormLineasState extends State<FormLineas> {
                   ),
                   Divider(
                     height: 5.0,
-                    color: Colors.blue.shade900,
+                    color: Colors.black,
                   ),
                   _buildLineas(listaFinal, context, _isMinBusVisible),
                 ]),
@@ -245,7 +250,6 @@ class _FormLineasState extends State<FormLineas> {
     return lineaAUX;
   }
 
-  //widget de lista de lineas
   Widget _buildLineas(List<Linea> lineas, context, _isVisible) {
     return ListView.builder(
       physics: BouncingScrollPhysics(),
@@ -254,7 +258,6 @@ class _FormLineasState extends State<FormLineas> {
       itemCount: lineas.length,
       itemBuilder: (context, index) {
         final linea = lineas[index];
-        //widget con informacion de lineas individuales
         return ListTile(
           tileColor: Colors.white,
           onTap: () => Navigator.of(context).push(
@@ -278,13 +281,13 @@ class _FormLineasState extends State<FormLineas> {
             style: TextStyle(
                 fontSize: 18.0,
                 fontWeight: FontWeight.bold,
-                color: Colors.blue.shade900),
+                color: Colors.black),
           ),
           subtitle: Text(linea.categoria),
           trailing: Icon(
             Icons.arrow_forward_ios_rounded,
             size: 30.0,
-            color: Colors.blue.shade900,
+            color: Colors.black,
           ),
         );
       },
@@ -293,9 +296,7 @@ class _FormLineasState extends State<FormLineas> {
 
   String _getInitial(String nombre) {
     if (nombre.startsWith("Línea ")) {
-      // Si el nombre de la línea comienza con "Linea ", se omite esa parte.
       String lineName = nombre.substring(6);
-      // Verificar si el nombre contiene un número
       int? number = int.tryParse(lineName);
       if (number != null) {
         return '$number';
@@ -303,13 +304,11 @@ class _FormLineasState extends State<FormLineas> {
         return lineName.substring(0, 1).toUpperCase();
       }
     } else {
-      // Si no comienza con "Linea ", simplemente se toma la primera letra
       return nombre.substring(0, 1).toUpperCase();
     }
   }
 
   String _getTitle(String nombre) {
-    // Si el nombre de la línea comienza con "Linea ", se omite esa parte.
     return nombre.startsWith("Linea ") ? nombre.substring(6) : nombre;
   }
 
