@@ -263,7 +263,10 @@ class _RutasState extends State<Rutas> {
               ),
             ],
           )
-              : Text("Para ajustar el rango de búsqueda presione el botón verde."),
+              : Container(
+                margin: const EdgeInsets.only(left: 10.0),
+                child: Text("Para ajustar el rango de búsqueda presione el botón verde."),
+              ),
           SizedBox(height: 16),
           if (_showSlider)
             Column(

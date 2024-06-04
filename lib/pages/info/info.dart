@@ -180,7 +180,9 @@ class _InfoAppState extends State<InfoApp> {
                 alignment: Alignment.topLeft,
                 padding: EdgeInsets.all(10),
                 child: Text(
-                  "Desarrollado por:\nUniversidad Privada Del Valle\n\nDesarrolladores:\n\nGabriel Sebastian Clavijo\nLuis Ángel Jallasa\nMirko Marca\nMiguel Angel Terrazas\nHeidi Ivanna Huanca\nAxel Eddy Martinez\nCristopher Joaquin Jimenez\nEric Emmanuel Galleguillos\nSergio Lara Rocabado\nJimena Gonzales\nAxel Matias Miranda\nCarolina Vivian Escobar\nPaulo David Crespo\nNoemi Sanchez\nEdward Rene Jimenez\nMichel Sanabria",
+                  "Desarrollado por:\nUniversidad Privada Del Valle\n\n"
+                      "Desarrolladores:""\n\nVersión 2.0:\nMishel Bravo\nLaura Nuñez"
+                      "\n\nVersión 1.0:\nGabriel Sebastian Clavijo\nLuis Ángel Jallasa\nMirko Marca\nMiguel Angel Terrazas\nHeidi Ivanna Huanca\nAxel Eddy Martinez\nCristopher Joaquin Jimenez\nEric Emmanuel Galleguillos\nSergio Lara Rocabado\nJimena Gonzales\nAxel Matias Miranda\nCarolina Vivian Escobar\nPaulo David Crespo\nNoemi Sanchez\nEdward Rene Jimenez\nMichel Sanabria",
                   style: TextStyle(
                     color: Colors.grey.shade800,
                     fontSize: 16.0,
