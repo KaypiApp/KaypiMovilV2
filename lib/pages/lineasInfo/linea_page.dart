@@ -116,7 +116,7 @@ class LineaPage extends StatelessWidget {
                 fontWeight: FontWeight.bold,
                 color: Colors.black,
               ),
-              textAlign: TextAlign.center,
+              textAlign: TextAlign.left,
             ),
             const SizedBox(height: 10),
             Text(
@@ -125,7 +125,7 @@ class LineaPage extends StatelessWidget {
                 fontSize: 16,
                 color: Colors.black,
               ),
-              textAlign: TextAlign.center,
+              textAlign: TextAlign.left,
             ),
           ],
         ),

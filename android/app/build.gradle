@@ -50,7 +50,7 @@ android {
         release {
             keyAlias 'kaypi'
             keyPassword 'Kaypiv303#'
-            storeFile file('C:/Users/launu/OneDrive/Documentos/GitHub/PR-24-KAYPI/kaypi_keystore.jks')
+            storeFile file('../../kaypi_keystore.jks')
             storePassword 'Kaypiv303#'
         }
     }
