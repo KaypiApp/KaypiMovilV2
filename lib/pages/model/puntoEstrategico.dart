@@ -24,16 +24,17 @@ class PuntoEstrategico {
 
   factory PuntoEstrategico.fromJson(Map<String, dynamic> json) {
     return new PuntoEstrategico(
-        id: json['_id'],
+        id: json['_id'].toString(),
         nombre: json['Nombre'],
         categoria: json['Categoria'],
-        calles: json['Calles'].cast<String>(),
+        calles: List<String>.from(json['Calles']),
         imagen: json['Imagen'],
         zonasCBBA: json['ZonasCBBA'],
-        lineas: json['Lineas'].cast<String>(),
+        lineas: List<String>.from(json['Lineas']),
         descripcion: json['Descripcion'],
         punto: Punto.fromJson(json['Punto']),
-        marcador: json['Marcador']);
+        marcador: json['Marcador'],
+    );
   }
 }
 

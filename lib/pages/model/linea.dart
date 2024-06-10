@@ -27,12 +27,12 @@ class Linea {
     return new Linea(
       nombre: json['Nombre'],
       categoria: json['Categoria'],
-      telefonos: json['Telefonos'].cast<String>(),
-      pasajes: json['Pasajes'].cast<String>(),
-      horarios: json['Horarios'].cast<String>(),
-      calles: json['Calles'].cast<String>(),
+      telefonos: List<String>.from(json['Telefonos']),
+      pasajes: List<String>.from(json['Pasajes']),
+      horarios: List<String>.from(json['Horarios']),
+      calles: List<String>.from(json['Calles']),
       imagen: json['Imagen'],
-      zonasCBBA: json['ZonasCBBA'].cast<String>(),
+      zonasCBBA: List<String>.from(json['ZonasCBBA']),
       ruta: rutasList,
     );
   }
@@ -61,7 +61,6 @@ class Ruta {
 }
 
 class Puntos {
-
   final double lat;
   final double lng;
 
