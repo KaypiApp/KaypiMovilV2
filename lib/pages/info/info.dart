@@ -84,7 +84,7 @@ class _InfoAppState extends State<InfoApp> {
                           ),
                           SizedBox(height: 20),
                           miCard(),
-                          miCard2(),
+                          Developers(),
                           Divider(
                             height: 90.0,
                             color: const Color.fromARGB(255, 0, 0, 0),
@@ -101,8 +101,14 @@ class _InfoAppState extends State<InfoApp> {
                             ),
                           ),
                           SizedBox(height: 30.0),
-                          miCard3(),
-                          miCardDesign(),
+                          OtherApp1(),
+                          OtherApp2(),
+
+                          Divider(
+                            height: 50.0,
+                            color: const Color.fromARGB(255, 0, 0, 0),
+                          ),
+                          Conditions(),
                         ],
                       ),
                     ),
@@ -154,7 +160,7 @@ class _InfoAppState extends State<InfoApp> {
     );
   }
 
-  Card miCard2() {
+  Card Developers() {
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       margin: EdgeInsets.all(10),
@@ -196,7 +202,7 @@ class _InfoAppState extends State<InfoApp> {
     );
   }
 
-  Card miCard3() {
+  Card OtherApp1() {
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       margin: EdgeInsets.all(10),
@@ -205,24 +211,24 @@ class _InfoAppState extends State<InfoApp> {
         width: double.infinity,
         padding: const EdgeInsets.all(10),
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             SizedBox(
-              width: 30,
-              height: 30,
+              width: 60,
+              height: 60,
               child: FadeInImage(
                 placeholder: AssetImage('assets/img/loading.gif'),
-                image: AssetImage('assets/img/tramitecochabamba.png'),
+                image: AssetImage('assets/img/maypi.webp'),
                 fit: BoxFit.cover,
               ),
             ),
             SizedBox(width: 10),
             Expanded(
               child: Container(
-                alignment: Alignment.topLeft,
+                alignment: Alignment.centerLeft,
                 padding: EdgeInsets.fromLTRB(5, 10, 40, 0),
                 child: Text(
-                  "Trámites Cochabamba\n\n",
+                  "MaypiVac \n",
                   style: TextStyle(
                     color: Colors.grey.shade800,
                     fontSize: 16.0,
@@ -232,7 +238,7 @@ class _InfoAppState extends State<InfoApp> {
             ),
             Center(
               child: MaterialButton(
-                color: Colors.blueAccent,
+                color: colorCabecera4,
                 textColor: Colors.white,
                 child: Icon(
                   Icons.download,
@@ -242,7 +248,7 @@ class _InfoAppState extends State<InfoApp> {
                 shape: CircleBorder(),
                 onPressed: () {
                   launch(
-                    "https://play.google.com/store/apps/details?id=bo.tramitesco.chabamba&hl=es&gl=US",
+                    "https://play.google.com/store/apps/details?id=com.sedes.maypivac",
                   );
                 },
               ),
@@ -253,8 +259,7 @@ class _InfoAppState extends State<InfoApp> {
     );
   }
 
-  ///instanciacion de la clase micardDesign
-  Card miCardDesign() {
+  Card OtherApp2() {
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       margin: EdgeInsets.all(10),
@@ -265,23 +270,23 @@ class _InfoAppState extends State<InfoApp> {
         child: Column(
           children: <Widget>[
             Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 SizedBox(
-                  width: 30,
-                  height: 30,
+                  width: 50,
+                  height: 50,
                   child: FadeInImage(
                     placeholder: AssetImage('assets/img/loading.gif'),
-                    image: AssetImage('assets/img/ciudadanoac.png'),
+                    image: AssetImage('assets/img/MiAmigaApp.png'),
                     fit: BoxFit.cover,
                   ),
                 ),
                 SizedBox(width: 10),
                 Expanded(
                   child: Container(
-                    alignment: Alignment.topLeft,
+                    alignment: Alignment.centerLeft,
                     padding: EdgeInsets.fromLTRB(5, 10, 40, 0),
-                    child: Text("Ciudadano Activo\n\n",
+                    child: Text("Mi Amiga (Slim) \n",
                       style: TextStyle(
                         color: Colors.grey.shade800,
                         fontSize: 16.0,
@@ -290,7 +295,7 @@ class _InfoAppState extends State<InfoApp> {
                 ),
                 Center(
                   child: MaterialButton(
-                    color: Colors.blueAccent,
+                    color: colorCabecera4,
                     textColor: Colors.white,
                     child: Icon(
                       Icons.download,
@@ -300,10 +305,58 @@ class _InfoAppState extends State<InfoApp> {
                     shape: CircleBorder(),
                     onPressed: () {
                       launch(
-                        "https://play.google.com/store/apps/details?id=com.gamc.ciudadanoactivo&hl=es_BO&gl=US",
+                        "https://play.google.com/store/apps/details?id=com.umaunivalle.miamiga_app",
                       );
                     },
                   ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Card Conditions() {
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      margin: EdgeInsets.all(10),
+      elevation: 10,
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(10),
+        child: Column(
+          children: <Widget>[
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Expanded(
+                  child: Container(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "Términos y Condiciones \n",
+                      style: TextStyle(
+                        color: Colors.grey.shade800,
+                        fontSize: 16.0,
+                      ),
+                    ),
+                  ),
+                ),
+                MaterialButton(
+                  color: colorCabecera4,
+                  textColor: Colors.white,
+                  child: Icon(
+                    Icons.manage_search,
+                    size: 24,
+                  ),
+                  padding: EdgeInsets.all(16),
+                  shape: CircleBorder(),
+                  onPressed: () {
+                    launch(
+                      "https://terminosycondicioneskaypi.blogspot.com/2024/03/terminos-y-condiciones.html",
+                    );
+                  },
                 ),
               ],
             ),

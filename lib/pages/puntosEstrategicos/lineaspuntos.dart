@@ -89,7 +89,9 @@ class _LineasPuntosState extends State<LineasPuntos> {
     builder: (context, snapshot) {
       switch (snapshot.connectionState) {
         case ConnectionState.waiting:
-          return Center(child: CircularProgressIndicator());
+          return Center(child: CircularProgressIndicator(
+            color: Colors.black,
+          ));
         default:
           if (snapshot.hasError) {
             return Center(child: Text('Error'));

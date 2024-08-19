@@ -98,7 +98,9 @@ class _NotificationsState extends State<Notifications> {
         backgroundColor: colorPage12, // Color de fondo
         body: isLoading
             ? Center(
-                child: CircularProgressIndicator(),
+                child: CircularProgressIndicator(
+                  color: Colors.black,
+                ),
               )
             : errorMessage.isNotEmpty
                 ? Center(

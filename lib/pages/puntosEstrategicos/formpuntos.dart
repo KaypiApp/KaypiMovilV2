@@ -140,7 +140,9 @@ class _FormPuntosState extends State<FormPuntos> {
                   );
                 })
             : Center(
-                child: CircularProgressIndicator(),
+                child: CircularProgressIndicator(
+                  color: Colors.black,
+                ),
               ),
       ) 
       );
@@ -151,7 +153,9 @@ class _FormPuntosState extends State<FormPuntos> {
     initialData: [],
     builder: (context, AsyncSnapshot<dynamic> snapshot) {
       if (snapshot.connectionState == ConnectionState.waiting) {
-        return Center(child: CircularProgressIndicator());
+        return Center(child: CircularProgressIndicator(
+          color: Colors.black,
+        ));
       } else if (snapshot.hasError) {
         return Center(child: Text('Error'));
       } else if (!snapshot.hasData) {

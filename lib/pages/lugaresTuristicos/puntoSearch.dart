@@ -60,7 +60,9 @@ class _PuntoSearchState extends State<PuntoSearch> {
         future: futurePoints,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return Center(child: CircularProgressIndicator(
+              color: Colors.black,
+            ));
           } else if (snapshot.hasError) {
             return Center(child: Text('Error al cargar los puntos estratégicos'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
