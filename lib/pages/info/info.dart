@@ -105,7 +105,7 @@ class _InfoAppState extends State<InfoApp> {
                           OtherApp2(),
 
                           Divider(
-                            height: 50.0,
+                            height: 30.0,
                             color: const Color.fromARGB(255, 0, 0, 0),
                           ),
                           Conditions(),
@@ -335,7 +335,7 @@ class _InfoAppState extends State<InfoApp> {
                   child: Container(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      "Términos y Condiciones \n",
+                      "Términos y Condiciones - Politica de Privacidad\n",
                       style: TextStyle(
                         color: Colors.grey.shade800,
                         fontSize: 16.0,
@@ -354,7 +354,7 @@ class _InfoAppState extends State<InfoApp> {
                   shape: CircleBorder(),
                   onPressed: () {
                     launch(
-                      "https://terminosycondicioneskaypi.blogspot.com/2024/03/terminos-y-condiciones.html",
+                      "https://umaunivalle.wordpress.com/2024/08/20/terminos-y-condiciones-de-uso-de-kaypi/",
                     );
                   },
                 ),
